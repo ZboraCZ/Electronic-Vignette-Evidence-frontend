@@ -10,9 +10,7 @@ const Home = () => {
   const usersState = useSelector(selectUsers)
 
   useEffect(() => {
-
     dispatch(fetchUsers())
-    
   }, [dispatch])
 
   const { users, pending, error } = usersState;
@@ -32,6 +30,7 @@ const Home = () => {
         {
           users && users.map(user => <li key={user.id}>{user.name}</li>)
         }
+
       </ul>
     </div>
   )

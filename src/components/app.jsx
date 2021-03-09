@@ -12,17 +12,3 @@ const App = (props) => {
 }
 
 export default App;
-
-/*
-
-useEffect(() => {
-  props.fetchUsers()
-}, [])
-
-const mapStateToProps = state => ({
-  users: state.users,
-})
-
-export default connect(mapStateToProps, { fetchPosts })(App);
-
-*/
