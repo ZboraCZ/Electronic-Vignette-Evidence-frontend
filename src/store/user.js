@@ -21,7 +21,8 @@ export const slice = createSlice({
         },
         [fetchUser.rejected]: (state, action) => {
             state.pending = false
-            state.error = action.payload
+
+            state.error = action.payload || action.error
         }
     }
 });

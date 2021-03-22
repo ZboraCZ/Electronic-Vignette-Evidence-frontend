@@ -23,18 +23,10 @@ const Home = () => {
   const { pending, error, user } = userState
 
     
-    if(pending) 
-        return (
-            <div>loading...</div>
-        )
-    
-    if(error) 
-        return (
-            <div>error</div>
-        )
-
     return (
         <Wrapper>
+            {pending && <div>loading...</div>}
+            {error && <div>error</div>}
             {user && (
             <>
                 <div>{user.email}</div>
