@@ -2,10 +2,12 @@ import { routerReducer } from 'react-router-redux'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
 
-import users from './users'
+import vignettes from './vignettes'
+import user from './user'
 
 const reducers = {
-  users
+  vignettes,
+  user
 }
 
 const middlewares = [thunk]

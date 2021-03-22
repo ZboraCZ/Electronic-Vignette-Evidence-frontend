@@ -1,13 +1,13 @@
 import axios from './config'
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchUsers = createAsyncThunk(
-    'users/fetchUsers',
+export const fetchVignetteTypes = createAsyncThunk(
+    'users/fetchVignetteTypes',
     async (data, { rejectWithValue }) => {
 
         try {
             
-            const response = await axios.get('users')
+            const response = await axios.get('vignettes/types')
             return response.data;
         
         } catch (err) {

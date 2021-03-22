@@ -1,38 +1,39 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react';
+import styled from 'styled-components'
 
-import { fetchUsers } from 'api/users'
-import { selectUsers } from 'store/users'
+import { fetchVignetteTypes } from 'api/vignette-types'
+import { Row, Col } from 'react-grid-system'
+
+import Wrapper from 'components/shared/wrapper'
+import Card from 'components/shared/card' 
 
 const Home = () => {
   
   const dispatch = useDispatch()
-  const usersState = useSelector(selectUsers)
+  //const vignetteState = useSelector(vignetteTypes)
 
   useEffect(() => {
-    dispatch(fetchUsers())
+    dispatch(fetchVignetteTypes())
   }, [dispatch])
 
-  const { users, pending, error } = usersState;
+  //const { types, pending, error } = vignetteState;
+  const data = {}
+  const { pending, error } = data
 
   return (
-    <div>
-      {
-        pending && <div>Loading...</div>
-      }
+    <Wrapper>
+      <Row>
+        <Col xs={8}><Card>KARTA BIG</Card></Col>
+        <Col xs={4}><Card>KARTA SMALL</Card></Col>
+      </Row>
 
-      {
-        !!error && <div>{error}</div>
-      }
-
-      <h1>home page</h1>
-      <ul>
-        {
-          users && users.map(user => <li key={user.id}>{user.name}</li>)
-        }
-
-      </ul>
-    </div>
+      <Row>
+        <Col xs={4}><Card>KARTA SMALL</Card></Col>
+        <Col xs={4}><Card>KARTA SMALL</Card></Col>
+        <Col xs={4}><Card>KARTA SMALL</Card></Col>
+      </Row>
+    </Wrapper>
   )
 }
 
