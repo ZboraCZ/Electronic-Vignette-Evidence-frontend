@@ -10,14 +10,24 @@ const reducers = {
   user
 }
 
+let helpers;
 const middlewares = [thunk]
+
+if(window.__REDUX_DEVTOOLS_EXTENSION__)
+  helpers = compose(
+    applyMiddleware(...middlewares),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+else
+  helpers = compose(
+    applyMiddleware(...middlewares)
+  )
+
 export default createStore(
   combineReducers({
     ...reducers,
     routing: routerReducer
   }),  
-  compose(
-    applyMiddleware(...middlewares),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  helpers
+  
 )
