@@ -1,36 +1,48 @@
-import styled from 'styled-components'
-import Menu from './menu'
-import Link from 'components/shared/link'
-import img from 'assets/logo.png'
-import Wrapper from 'components/shared/wrapper'
-import { Container, Row, Col } from 'react-grid-system';  
+import { useState, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles';
+import { AppBar, Toolbar  } from "@material-ui/core";
 
-const Navbar = (props) => (
-  <NavbarStyled>
-    <Wrapper>
-        <Row debug nogutter>
-          <Col debug>
-            <Link to='/'>
-              <Img src={img} />
-            </Link>
-          </Col>
-          <Col xs='content' debug>
-            <Menu />
-          </Col>
-        </Row>
-    </Wrapper>
-  </NavbarStyled>
-)
+import MobileBar from './mobile-bar'
+import DesktopBar from './desktop-bar'
+
+const Navbar = (props) => {
+
+  const [isMobile, setMobile] = useState(false)
+
+  const classes = useStyles()
+
+  useEffect(() => {
+    const setResponsiveness = () => {
+      return window.innerWidth < 700
+      ? setMobile(true)
+      : setMobile(false)
+    };
+    setResponsiveness();
+    window.addEventListener("resize", () => setResponsiveness());
+  }, []);
+
+  return (
+    <AppBar className={classes.navbar}>   
+      <Toolbar className={classes.toolbar}>       
+        {isMobile ? <MobileBar /> : <DesktopBar />}
+      </Toolbar>
+    </AppBar>
+  )
+}
 
 export default Navbar;
 
-const Img = styled.img`
-  width: 150px;
-  height: auto;
-`
-
-const NavbarStyled = styled.div`
-  width: 100%;
-  height: 80px;
-  background: salmon;
-`;
+const useStyles = makeStyles(() => ({
+  navbar: {
+    paddingRight: "79px",
+    paddingLeft: "79px",
+    "@media (max-width: 700px)": {
+      paddingLeft: 0,
+      paddingRight: 0
+    } 
+  },
+  toolbar: {
+    display: 'flex',
+    justifyContent: "space-between"
+  }
+}))

@@ -25,7 +25,11 @@ Production bundled build
 
 ### API documentation
 [Swagger](https://app.swaggerhub.com/apis/Jiri_Jerabek/Elektronicke-dalnicni-znamky/1.0.0#/)
-### Authors:
+
+### Material UI React components 
+[Material-ui](https://material-ui.com/)
+
+### Authors
 * Jakub Drajstajtl
 * Jiří Jeřábek
 * Jiří Zbořil

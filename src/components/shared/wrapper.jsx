@@ -1,9 +1,25 @@
-import styled from 'styled-components'
+import { makeStyles } from '@material-ui/core/styles';
 
-const WrapperStyled = styled.div`
-    max-width: 1200px;
-    margin: auto;
-`;
+const Wrapper = (props) => {
+    const classes = useStyles();
 
-export default WrapperStyled;
+    return (
+        <div className={`${classes.wrapper} ${props.className}`} >
+          {props.children}
+        </div>
+    )
+}
+export default Wrapper;
 
+
+const useStyles = makeStyles(() => ({
+    wrapper: {
+      paddingRight: "103px",
+      paddingLeft: "103px",
+      height: 'auto',
+      "@media (max-width: 700px)": {
+        paddingLeft: '16px',
+        paddingRight: '16px'
+      } 
+    }
+}))

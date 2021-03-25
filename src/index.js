@@ -8,18 +8,24 @@ import { Router } from 'react-router'
 import { createBrowserHistory } from 'history'
 import { syncHistoryWithStore } from 'react-router-redux'
 
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import { ThemeProvider } from '@material-ui/core/styles';
+import { theme } from 'theme'
+
 import store from 'store'
 
 const history = syncHistoryWithStore(createBrowserHistory(), store)
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router history={history}>
+  <Provider store={store}>
+    <Router history={history}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <App />
-      </Router>
-    </Provider>
-  </React.StrictMode>,
+      </ThemeProvider>
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 

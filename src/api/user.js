@@ -7,16 +7,8 @@ export const fetchUser = createAsyncThunk(
 
         try {
             
-            //const response = await axios.get(`users/${id}`)
-            //return response.data;
-            const user = {
-                "userId": 0,
-                "email": "jouda@email.cz",
-                "firstName": "jouda",
-                "lastName": "novak",
-                "phone": "158"
-            }
-            return user
+            const response = await axios.get(`users/${id}`)
+            return response.data;
             
         } catch (err) {
             return rejectWithValue(err.response.error || err)

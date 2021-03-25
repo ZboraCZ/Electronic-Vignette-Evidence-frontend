@@ -1,0 +1,66 @@
+import { makeStyles } from '@material-ui/core/styles';
+import { Paper, Grid, Typography, Button } from '@material-ui/core';
+
+const VignetteTypes = ({ types }) => {
+    const classes = useStyles();
+
+    return (
+      <Grid container spacing={1} className={classes.root}>
+        {types.map(type => (
+          <Grid item xs={12} sm={4} key={type.price}>
+            <Paper variant="outlined" className={classes.vignetteType}>
+              <div className={classes.title}>
+                <Typography variant="h5" component="h5">
+                  <strong>{type.display_name}</strong>
+                </Typography>
+  
+                <Typography variant="subtitle1">
+                  Varianta
+                </Typography>
+              </div>
+              <div className={classes.price}>
+                <Typography variant="h5">
+                  <strong>{type.price} Kč</strong>
+                </Typography>
+  
+                <Typography variant="subtitle1">
+                  Cena
+                </Typography>
+              </div>
+  
+              <Button 
+                variant="contained" 
+                color="primary"
+              >
+                Koupit
+              </Button>
+            </Paper> 
+          </Grid>
+        ))}
+      </Grid>
+    )
+    
+}
+export default VignetteTypes; 
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        height: '100%'
+    },
+    paper: {
+      padding: theme.spacing(1),
+      textAlign: 'center',
+    },
+    vignetteType: {
+      height: '300px',
+      padding: theme.spacing(2),
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexDirection: 'column',
+      paddingTop: '30px',
+      paddingBottom: '30px',
+      textAlign: 'center'
+    }
+  }));
+  
+  

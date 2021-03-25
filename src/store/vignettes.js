@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchVignetteTypes } from 'api/vignette-types';
 
-
 // Reducer
 export const slice = createSlice({
     name: 'vignettes',
@@ -22,7 +21,7 @@ export const slice = createSlice({
         },
         [fetchVignetteTypes.rejected]: (state, action) => {
             state.pending = false
-            state.error = action.payload
+            state.error = action.payload || true
         }
     }
 });

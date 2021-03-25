@@ -7,6 +7,6 @@ export const routes = [
     {route: 'kontakt', component: 'contact'},
     {route: 'kosik', component: 'cart'},
     {route: 'prehled', component: 'user'},
-
+    {route: 'login', component: 'login'},
     {route: '', component: 'home'},
 ]
