@@ -4,10 +4,12 @@ import thunk from 'redux-thunk';
 
 import vignettes from './vignettes'
 import user from './user'
+import auth from './auth'
 
 const reducers = {
+  auth,
   vignettes,
-  user
+  user,
 }
 
 let helpers;

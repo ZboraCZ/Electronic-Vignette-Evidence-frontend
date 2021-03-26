@@ -10,11 +10,13 @@ import Hidden from '@material-ui/core/Hidden';
 import Alert from 'components/shared/alert';
 import Loader from 'components/shared/loader'
 import { Link } from 'react-router-dom';
+import { getIsAuth } from 'store/auth';
 
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
   const vignetteState = useSelector(vignetteTypes)
+  const isAuth = useSelector(getIsAuth)
 
   useEffect(() => {
     dispatch(fetchVignetteTypes())
@@ -40,21 +42,36 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} sm={4}>
           <Hidden xsDown>
-            <Paper className={classes.paper}>
-              <div className={classes.login}>
-                <div className={classes.img}>
-                  <img src={profileImg} className={classes.profileImg} alt='login label'/>
+            {isAuth ? (
+              <Paper className={classes.paper}>
+                <div className={classes.user}>
+                  <Button 
+                    variant="contained" 
+                    color="primary"
+                    to= '/prehled'
+                    component={Link}
+                  >
+                    Moje zakoupené známky
+                  </Button>
                 </div>
-                <Button 
-                  variant="contained" 
-                  color="primary"
-                  to= '/login'
-                  component={Link}
-                >
-                  Přihlásit se
-                </Button>
-              </div>
-            </Paper>
+              </Paper>
+            ) : (
+              <Paper className={classes.paper}>
+                <div className={classes.login}>
+                  <div className={classes.img}>
+                    <img src={profileImg} className={classes.profileImg} alt='login label'/>
+                  </div>
+                  <Button 
+                    variant="contained" 
+                    color="primary"
+                    to= '/login'
+                    component={Link}
+                  >
+                    Přihlásit se
+                  </Button>
+                </div>
+              </Paper>
+            )}
           </Hidden>
         </Grid>
       </Grid>
@@ -76,6 +93,13 @@ const useStyles = makeStyles((theme) => ({
     height: '300px',
     flexDirection: 'column',
     textAlign: 'center'
+  },
+  user: {
+    height: '300px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+   
   },
   img: {
     overflow: 'hidden'

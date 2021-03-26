@@ -1,11 +1,19 @@
 import { Suspense } from "react";
-import { Switch, Route } from "react-router-dom";
-import { routes, lazyImport } from './routes';
+import { Switch } from "react-router-dom";
+import { lazyImport, PublicRoute, PrivateRoute } from 'utils/routing';
+import { privateRoutes, publicRoutes } from './route-list';
+
 
 const AppRouter = () => (
     <Suspense fallback={<div>Loading...</div>}>
         <Switch>
-            {routes.map((route, i) => <Route key={i} path={`/${route.route}`} component={lazyImport(route.component)} /> )}
+            {publicRoutes.map(({ route, component, restricted }, i) => (
+                <PublicRoute restricted={!!restricted} component={lazyImport(component)} path={`/${route}`} exact key={i} /> 
+            ))}
+
+            {privateRoutes.map(({ route, component }, i) => (
+                <PrivateRoute component={lazyImport(component)} path={`/${route}`} exact key={i} /> 
+            ))}
         </Switch>
     </Suspense>
 )
