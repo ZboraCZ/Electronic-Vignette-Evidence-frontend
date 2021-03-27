@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { Paper, Grid, Typography, Button } from '@material-ui/core';
+import { Paper, Grid, Typography, Button, Divider } from '@material-ui/core';
 
 const VignetteTypes = ({ types }) => {
   const classes = useStyles();
@@ -18,6 +18,7 @@ const VignetteTypes = ({ types }) => {
                 Varianta
               </Typography>
             </div>
+
             <div className={classes.price}>
               <Typography variant="h5">
                 <strong>{type.price} Kč</strong>
@@ -28,9 +29,10 @@ const VignetteTypes = ({ types }) => {
               </Typography>
             </div>
 
+            <Divider />
             <Button 
-              variant="contained" 
-              color="primary"
+              size='large' 
+              color='primary'
             >
               Koupit
             </Button>

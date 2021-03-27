@@ -26,6 +26,7 @@ const Home = () => {
  
   return (
     <div>
+
       <Grid container spacing={1} className={classes.root}>
         <Grid item xs={12} sm={8}>
           <Paper className={classes.paper}>
@@ -74,6 +75,21 @@ const Home = () => {
               </Paper>
             )}
           </Hidden>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={1} className={classes.root}>
+        <Grid item xs={12} sm={4}>
+          <Paper className={classes.paper}>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Paper className={classes.paper}>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Paper className={classes.paper}>
+          </Paper>
         </Grid>
       </Grid>
     </div>
