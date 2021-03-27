@@ -16,6 +16,7 @@ export default Logo
 
 const useStyles = makeStyles(theme => ({
     logo: {
-        width: ({ size }) => size ? size : '120px'
+        width: ({ size }) => size ? size : '120px',
+        display: 'flex'
     }
 }))

@@ -13,7 +13,7 @@ const UserNavigation = () => {
     const isAuth = useSelector(getIsAuth)
 
     return (
-        <span className={classes.userNavigation}>
+        <div className={classes.userNavigation}>
             {isAuth && (
                 <IconButton
                     {...{
@@ -33,11 +33,15 @@ const UserNavigation = () => {
             }}>
                 <ShoppingCartIcon />
             </IconButton>
-        </span>
+        </div>
     )
 }
 export default UserNavigation;
 
 
 const useStyles = makeStyles(() => ({
+    userNavigation: {
+        marginLeft: '10px',
+        display: 'flex'
+    }
 }));

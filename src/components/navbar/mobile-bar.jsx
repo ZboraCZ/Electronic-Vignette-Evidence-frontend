@@ -27,7 +27,7 @@ const MobileBar = () => {
   return (
     <>
       <Logo />
-      <div>
+      <div className={classes.navigation}>
         <UserNavigation />
         <IconButton
           {...{
@@ -83,4 +83,7 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  navigation: {
+    display: 'flex'
+  }
 }));

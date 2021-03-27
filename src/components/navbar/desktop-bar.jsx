@@ -13,7 +13,7 @@ const DesktopBar = () => {
   return (
     <>
       <Logo />
-      <div>
+      <div className={classes.navigation}>
         {menu.map(({ label, href }) => (
           <Button
             {...{
@@ -27,9 +27,9 @@ const DesktopBar = () => {
             {label}
           </Button>
         ))}
-        <span className={classes.userNavigation}>
+        {/*<div className={classes.userNavigation}>*/}
           <UserNavigation />
-        </span>
+        {/*</div>*/}
       </div>
     </>
   );
@@ -37,7 +37,7 @@ const DesktopBar = () => {
 export default DesktopBar
 
 const useStyles = makeStyles(() => ({
-  userNavigation: {
-    marginLeft: '10px'
+  navigation: {
+    display: 'flex'
   }
 }))

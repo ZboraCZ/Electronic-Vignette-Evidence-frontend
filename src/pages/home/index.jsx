@@ -12,6 +12,8 @@ import Loader from 'components/shared/loader'
 import { Link } from 'react-router-dom';
 import { getIsAuth } from 'store/auth';
 
+import LPValidity from './lp-validity';
+
 const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch()
@@ -80,8 +82,8 @@ const Home = () => {
 
       <Grid container spacing={1} className={classes.root}>
         <Grid item xs={12} sm={4}>
-          <Paper className={classes.paper}>
-          </Paper>
+          <LPValidity />
+
         </Grid>
         <Grid item xs={12} sm={4}>
           <Paper className={classes.paper}>

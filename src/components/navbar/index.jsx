@@ -1,15 +1,26 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar  } from "@material-ui/core";
-
+import { AppBar, Toolbar, FormGroup, FormControlLabel, Switch } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux'
+import Wrapper from 'components/shared/wrapper';
+import { getIsAuth, login, logout } from 'store/auth';
 import MobileBar from './mobile-bar'
 import DesktopBar from './desktop-bar'
+import clsx from  'clsx';
 
 const Navbar = (props) => {
 
   const [isMobile, setMobile] = useState(false)
 
   const classes = useStyles()
+
+  const dispatch = useDispatch()
+  const auth = useSelector(getIsAuth)
+
+  const handleAuth = auth => {
+    dispatch(auth ? login() : logout())
+  }
 
   useEffect(() => {
     const setResponsiveness = () => {
@@ -22,11 +33,21 @@ const Navbar = (props) => {
   }, []);
 
   return (
-    <AppBar className={classes.navbar}>   
-      <Toolbar className={classes.toolbar}>       
-        {isMobile ? <MobileBar /> : <DesktopBar />}
-      </Toolbar>
-    </AppBar>
+    <>
+      <FormGroup>
+        <FormControlLabel
+          control={<Switch checked={auth} onChange={() => handleAuth(!auth)} aria-label="login switch" />}
+          label={auth ? 'Logout' : 'Login'}
+        />
+      </FormGroup>
+      <AppBar className={classes.navbar}>   
+        <Toolbar disableGutters className={classes.toolbar}>  
+          <Wrapper className={classes.NavbarWrapper}>  
+            {isMobile ? <MobileBar /> : <DesktopBar />}
+          </Wrapper>
+        </Toolbar>
+      </AppBar>
+    </>
   )
 }
 
@@ -34,8 +55,6 @@ export default Navbar;
 
 const useStyles = makeStyles(() => ({
   navbar: {
-    paddingRight: "79px",
-    paddingLeft: "79px",
     "@media (max-width: 700px)": {
       paddingLeft: 0,
       paddingRight: 0
@@ -44,5 +63,15 @@ const useStyles = makeStyles(() => ({
   toolbar: {
     display: 'flex',
     justifyContent: "space-between"
+  },
+  NavbarWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '1200px'
   }
 }))
+/*
+const NavbarWrapper = withStyles({
+  
+})(Wrapper); 
+*/
