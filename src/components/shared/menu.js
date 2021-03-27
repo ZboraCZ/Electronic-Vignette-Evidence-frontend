@@ -1,5 +1,4 @@
 export const menu = [
-  {label: 'Domů', href: '/'},
-  {label: 'Lorem', href: '/lorem'},
-  {label: 'Ipsum', href: '/ipsum'},
+  {label: 'Zakoupit známku', href: '/'},
+  {label: 'Moje známky', href: '/prehled'},
 ]

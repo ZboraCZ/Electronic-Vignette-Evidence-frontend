@@ -3,6 +3,7 @@ export const publicRoutes = [
     {route: 'kosik', component: 'cart'},
     {route: 'login', component: 'login', restricted: true},
     {route: 'registrace', component: 'registration', restricted: true},
+    {route: 'o-projektu', component: 'about-project'},
     {route: '', component: 'home'},
 ]
 

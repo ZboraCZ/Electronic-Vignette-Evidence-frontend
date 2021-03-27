@@ -27,6 +27,9 @@ const Footer = () => {
                                     <Link className={classes.link} to={href}>{label}</Link>
                                 </Typography>
                             ))}
+                            <Typography variant="button" display="block" gutterBottom className={classes.linkTypo}>
+                                <Link className={classes.link} to='/o-projektu'>O projektu</Link>
+                            </Typography>
                         </Grid>
                     </Grid>
             </Wrapper>

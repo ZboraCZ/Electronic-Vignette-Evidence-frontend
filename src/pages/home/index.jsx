@@ -48,8 +48,9 @@ const Home = () => {
                   <Button 
                     variant="contained" 
                     color="primary"
-                    to= '/prehled'
+                    to='/prehled'
                     component={Link}
+                    size='large'
                   >
                     Moje zakoupené známky
                   </Button>

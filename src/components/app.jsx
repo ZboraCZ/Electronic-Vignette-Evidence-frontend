@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
   main: {
     flexGrow: '1',
-    marginTop: '70px',
+    marginTop: '80px',
     marginBottom: '30px',
     background: theme.background
   }

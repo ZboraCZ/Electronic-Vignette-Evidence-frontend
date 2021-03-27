@@ -38,6 +38,6 @@ export default DesktopBar
 
 const useStyles = makeStyles(() => ({
   userNavigation: {
-    marginLeft: '50px'
+    marginLeft: '10px'
   }
 }))
