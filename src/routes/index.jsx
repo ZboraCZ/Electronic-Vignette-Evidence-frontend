@@ -4,7 +4,6 @@ import Loader from 'components/shared/loader';
 import { lazyImport, PublicRoute, PrivateRoute } from 'utils/routing';
 import { privateRoutes, publicRoutes } from './route-list';
 
-
 const AppRouter = () => (
     <Suspense fallback={<Loader />}>
         <Switch>

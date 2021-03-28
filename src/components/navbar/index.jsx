@@ -74,8 +74,3 @@ const useStyles = makeStyles(() => ({
     background: 'silver'
   }
 }))
-/*
-const NavbarWrapper = withStyles({
-  
-})(Wrapper); 
-*/

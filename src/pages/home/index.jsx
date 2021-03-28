@@ -3,16 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Paper, Grid, Button } from '@material-ui/core';
 import { fetchVignetteTypes } from 'api/vignette-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { vignetteTypes } from 'store/vignettes';
-import profileImg from 'assets/profile.png';
-import VignetteTypes from './vignette-types'
 import Hidden from '@material-ui/core/Hidden';
-import Alert from 'components/shared/alert';
-import Loader from 'components/shared/loader'
+import { vignetteTypes } from 'store/vignettes';
 import { Link } from 'react-router-dom';
 import { getIsAuth } from 'store/auth';
+import profileImg from 'assets/profile.png';
 
+import VignetteTypes from './vignette-types'
+import Alert from 'components/shared/alert';
+import Loader from 'components/shared/loader'
+import Accordion from 'components/shared/accordion'
 import LPValidity from './lp-validity';
+
+import articles from 'pages/information/articles'
 
 const Home = () => {
   const classes = useStyles();
@@ -83,15 +86,25 @@ const Home = () => {
       <Grid container spacing={1} className={classes.root}>
         <Grid item xs={12} sm={4}>
           <LPValidity />
-
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <Paper className={classes.paper}>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Paper className={classes.paper}>
-          </Paper>
+        <Grid item xs={12} sm={8}>
+          <Accordion data={articles.slice(0, 3)} />
+          <Grid
+            container
+            direction="row"
+            justify="flex-end"
+            alignItems="flex-end"
+            className={classes.readMore}
+          >
+            <Button 
+              size="large" 
+              color="primary" 
+              component={Link}
+              to='/informace'
+            >
+              Přečíst více zde
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </div>
@@ -131,5 +144,5 @@ const useStyles = makeStyles((theme) => ({
   },
   loader: {
     height: '300px'
-  }
+  },
 }));
