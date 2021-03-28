@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, FormGroup, FormControlLabel, Switch } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux'
 import Wrapper from 'components/shared/wrapper';
 import { getIsAuth, login, logout } from 'store/auth';
 import MobileBar from './mobile-bar'
 import DesktopBar from './desktop-bar'
-import clsx from  'clsx';
 
 const Navbar = (props) => {
 
@@ -34,7 +32,7 @@ const Navbar = (props) => {
 
   return (
     <>
-      <FormGroup>
+      <FormGroup className={classes.fakeAuth}>
         <FormControlLabel
           control={<Switch checked={auth} onChange={() => handleAuth(!auth)} aria-label="login switch" />}
           label={auth ? 'Logout' : 'Login'}
@@ -68,6 +66,12 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     width: '1200px'
+  },
+  fakeAuth: {
+    width: '100%',
+    height: '40px',
+    position: 'fixed',
+    background: 'silver'
   }
 }))
 /*
