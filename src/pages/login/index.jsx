@@ -12,21 +12,16 @@ const Login = () => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
+        <Typography variant="h5" gutterBottom>
+          Přihlášení
+        </Typography>
         <TextField
-          error
-          id="outlined-error-helper-text"
-          label="Error"
-          defaultValue="Hello World"
-          helperText="Incorrect entry."
+          label="Email"
           variant="outlined"
         />
 
         <TextField
-          error
-          id="outlined-error-helper-text"
-          label="Error"
-          defaultValue="Hello World"
-          helperText="Incorrect entry."
+          label="Heslo"
           variant="outlined"
         />
 
