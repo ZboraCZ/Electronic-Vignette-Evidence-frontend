@@ -23,6 +23,7 @@ const DesktopBar = () => {
               component: Link,
               className: classes.navigation,
             }}
+            data-cy={`appbar-menu-${href}`}
           >
             {label}
           </Button>
