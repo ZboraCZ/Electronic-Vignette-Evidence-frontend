@@ -36,6 +36,7 @@ const VignetteTypes = ({ types }) => {
               to={`/objednavka/${type.id}`}
               size='large' 
               color='primary'
+              data-cy={`vignettetype-buy`}
             >
               Koupit
             </Button>
