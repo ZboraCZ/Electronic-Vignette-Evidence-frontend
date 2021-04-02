@@ -4,6 +4,7 @@ import Loader from 'components/shared/loader';
 import { lazyImport, PublicRoute, PrivateRoute } from 'utils/routing';
 import { privateRoutes, publicRoutes } from './route-list';
 
+
 const AppRouter = () => (
     <Suspense fallback={<Loader />}>
         <Switch>
@@ -14,6 +15,8 @@ const AppRouter = () => (
             {privateRoutes.map(({ route, component }, i) => (
                 <PrivateRoute component={lazyImport(component)} path={`/${route}`} exact key={i} /> 
             ))}
+
+            <PublicRoute restricted={false} component={lazyImport('not-found')} path={'*'} exact />
         </Switch>
     </Suspense>
 )

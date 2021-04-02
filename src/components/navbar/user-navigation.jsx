@@ -24,15 +24,6 @@ const UserNavigation = () => {
                     <AccountCircleIcon />
                 </IconButton>
             )}
-
-            <IconButton 
-                {...{
-                color: 'inherit',
-                to: '/kosik',
-                component: Link,
-            }}>
-                <ShoppingCartIcon />
-            </IconButton>
         </div>
     )
 }

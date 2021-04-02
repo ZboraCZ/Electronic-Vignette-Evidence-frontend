@@ -27,9 +27,7 @@ const DesktopBar = () => {
             {label}
           </Button>
         ))}
-        {/*<div className={classes.userNavigation}>*/}
           <UserNavigation />
-        {/*</div>*/}
       </div>
     </>
   );
