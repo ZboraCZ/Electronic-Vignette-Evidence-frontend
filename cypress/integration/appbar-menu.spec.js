@@ -8,4 +8,9 @@ it('navigate around the website', () => {
   cy.get('[data-cy="appbar-menu-/prehled"]').contains('Moje známky').click();
   cy.location('pathname').should('match', /\/login$/)
   cy.get('main');
+
+  cy.get('[data-cy="link-to-registration"]').contains('Zaregistrujte se.').click();
+  cy.location('pathname').should('match', /\/registrace$/)
+  cy.get('main').contains('Registrace');
+
 });

@@ -32,7 +32,12 @@ const Login = () => {
         <div>
           <Typography className={classes.description}>
             Nemate vytvořený učet? 
-            <Button color="primary" component={Link} to='/registrace'>
+            <Button 
+              color='primary' 
+              component={Link} 
+              to='/registrace'
+              data-cy='link-to-registration'
+            >
               Zaregistrujte se.
             </Button>
           </Typography>

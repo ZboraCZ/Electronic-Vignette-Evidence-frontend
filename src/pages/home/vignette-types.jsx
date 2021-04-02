@@ -33,6 +33,7 @@ const VignetteTypes = ({ types }) => {
             <Button 
               size='large' 
               color='primary'
+              data-cy={`vignettetype-buy`}
             >
               Koupit
             </Button>
