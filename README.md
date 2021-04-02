@@ -29,6 +29,9 @@ Production bundled build
 ### Material UI React components 
 [Material-ui](https://material-ui.com/)
 
+### Integration testing
+[Cypress.io](https://www.cypress.io/)
+
 ### Authors
 * Jakub Drajstajtl
 * Jiří Jeřábek
