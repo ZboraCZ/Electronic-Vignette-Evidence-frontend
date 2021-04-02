@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Grid, Typography, Button, Divider } from '@material-ui/core';
+import { Link } from 'react-router-dom'
 
 const VignetteTypes = ({ types }) => {
   const classes = useStyles();
@@ -31,6 +32,8 @@ const VignetteTypes = ({ types }) => {
 
             <Divider />
             <Button 
+              component={Link} 
+              to={`/objednavka/${type.id}`}
               size='large' 
               color='primary'
               data-cy={`vignettetype-buy`}

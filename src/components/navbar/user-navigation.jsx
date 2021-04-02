@@ -24,17 +24,6 @@ const UserNavigation = () => {
                     <AccountCircleIcon />
                 </IconButton>
             )}
-
-            <IconButton 
-                {...{
-                    color: 'inherit',
-                    to: '/kosik',
-                    component: Link,
-                }}
-                data-cy='appbar-menu-cart'
-            >
-                <ShoppingCartIcon />
-            </IconButton>
         </div>
     )
 }

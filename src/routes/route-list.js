@@ -1,11 +1,11 @@
 export const publicRoutes = [
     {route: 'domu', component: 'home'},
-    {route: 'kosik', component: 'cart'},
+    {route: 'objednavka/:id', component: 'purchase'},
     {route: 'login', component: 'login', restricted: true},
     {route: 'registrace', component: 'registration', restricted: true},
     {route: 'informace', component: 'information'},
     {route: 'o-projektu', component: 'about-project'},
-    {route: '', component: 'home'},
+    {route: '', component: 'home'}
 ]
 
 export const privateRoutes = [
