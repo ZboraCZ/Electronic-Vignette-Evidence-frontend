@@ -17,7 +17,8 @@ export const theme = createMuiTheme({
       darker: '#327AA1',
       darkest: '#013C5C',
       contrastText: '#fff'
-    }
+    },
+    price: '#ba000d'
   },
   typography: {
     subtitle1: {

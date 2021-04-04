@@ -18,7 +18,7 @@ Update project dependencies
 #### `npm update`
 
 Test
-#### `npm test`
+#### `npx cypress open`
 
 Production bundled build
 #### `npm build`

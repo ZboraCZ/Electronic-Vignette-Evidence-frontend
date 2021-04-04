@@ -5,32 +5,54 @@ import LoadingButton from 'components/shared/loading-button';
 import { makeStyles } from '@material-ui/core/styles';
 import { fetchVignetteValidate } from 'api/vignettes'
 import Vignette from 'components/vignette';
+import LicensePlateValidator from 'components/shared/license-plate-validator';
 
 const LPValidity = () => {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
-  const [LP, setLP] = useState('');
+  const [lp, setLP] = useState(null);
 
   const [validVignette, setValidVignette] = useState(null)
+  const [vignetteFree, setVignetteFree] = useState(null)
   
-  const handleLP = ({ target }) => setLP(target.value)
+  useEffect(() => {
+    //console.log()
+  }, [validVignette])
 
   const handleButtonClick = () => {
-   
+    
     setLoading(true);
     setTimeout(() => {
-      fetchVignetteValidate(LP).then(res => {
-        setValidVignette(res)
-        setLoading(false);
-      });
+      fetchVignetteValidate(lp)
+        .then(res => {
+          setVignetteFree(true)
+          setLoading(false);
+          console.log(res.data[0])
+          /*
+          setValidVignette(prevState => ({
+            ...prevState,
+            valid: true,
+            vignette: res.data[0]
+          }))
+          */
+        })
+        .catch(err => {
+          setVignetteFree(false)
+          setLoading(false)
+          setValidVignette(prevState => ({
+            ...prevState,
+            valid: false
+          }))
+        });
     }, 1500);
     
   };
 
-  useEffect(() => {
-    //console.log()
-  }, [validVignette])
+  const validFormat = (lp) => {
+    setLP(lp)
+  }
+
 
   return (
     <Paper className={classes.paper}>
@@ -42,15 +64,11 @@ const LPValidity = () => {
         Stačí zadat SPZ vozidla a dozvíte, zda máte pro dnešní den platnou elektronickou dálniční známku
       </Typography>
 
-      <TextField
-        type='text'
-        variant='outlined'
-        placeholder={'Např. 4A2 3000'}
-        className={classes.infoText}
-        label='SPZ'
-        onChange={handleLP}
-        value={LP}
-        error={validVignette && !validVignette.valid}
+      <LicensePlateValidator 
+        onChange={lp => console.log(lp)}
+        validFormat={validFormat} 
+        pending={loading} 
+        state={vignetteFree} 
       />
 
       <Grid container justify="center" >

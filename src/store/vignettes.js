@@ -28,6 +28,7 @@ export const slice = createSlice({
 
 // Selectors
 export const vignetteTypes = state => state.vignettes;
-  
+export const vignetteTypeById = (state, id) => state.vignettes.types.find(type => type.id === id)
+
 export default slice.reducer;
   
