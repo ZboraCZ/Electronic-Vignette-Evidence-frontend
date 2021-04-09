@@ -18,7 +18,7 @@ const UserNavigation = () => {
                 <IconButton
                     {...{
                     color: 'inherit',
-                    to: '/login',
+                    to: '/profil',
                     component: Link,
                 }}>
                     <AccountCircleIcon />

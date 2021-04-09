@@ -15,3 +15,17 @@ export const fetchUser = createAsyncThunk(
         }
 })
 
+export const patchUser = createAsyncThunk(
+    'users/patchUser',
+    async (user, { rejectWithValue }) => {
+
+        try {
+            
+            const response = await axios.patch(`users/${user.id}`, user)
+            return response.data;
+            
+        } catch (err) {
+            return rejectWithValue(err.response.error || err)
+        }
+})
+

@@ -9,6 +9,7 @@ export const publicRoutes = [
 ]
 
 export const privateRoutes = [
-    {route: 'prehled', component: 'overview'}
+    {route: 'prehled', component: 'overview'},
+    {route: 'profil', component: 'my-profile'}
 ]
 

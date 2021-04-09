@@ -1,6 +1,7 @@
 import { Grid } from '@material-ui/core';
 import Vignette from 'components/vignette'
 import Loader from 'components/shared/loader'
+
 const Overview = () => {
 
     //mocked vignette
