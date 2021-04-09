@@ -31,21 +31,8 @@ import Icon from '@material-ui/core/Icon';
 import SaveIcon from '@material-ui/icons/Save';
 
 import { patchUser } from 'api/user'
-
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        hidden={value !== index}
-        id={`vertical-tabpanel-${index}`}
-        {...other}
-      >
-        {value === index && children}
-      </div>
-    );
-  }
+import TabPanel from './tab-panel'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
   
 const MyProfile = () => {
@@ -53,6 +40,7 @@ const MyProfile = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userState = useSelector(getUser);
+  const matches = useMediaQuery(theme => theme.breakpoints.down('xs'));
 
   const [value, setValue] = useState(0);
   const [isEditing, setIsEditing] = useState(true);
@@ -60,6 +48,7 @@ const MyProfile = () => {
   const [localUser, setLocalUser] = useState(null)
 
   const open = Boolean(anchorEl);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -98,11 +87,11 @@ const MyProfile = () => {
 
   return (
     <div className={classes.root}>
-        <Grid container>
-            <Grid item xs={4}>
+        <Grid container spacing={2}>
+            <Grid item xs={12} sm={4} >
                 <Paper className={classes.leftPanel}>
                     <Tabs
-                        orientation='vertical'
+                        orientation={matches ? 'horizontal' : 'vertical'}
                         value={value}
                         onChange={handleChange}
                         className={classes.tabs}
@@ -114,7 +103,7 @@ const MyProfile = () => {
                 </Paper>
             </Grid>
             
-            <Grid item xs={8}>
+            <Grid item xs={12} sm={8}>
                 <Grid container>                    
                     <Paper className={classes.paper}>
                     {
@@ -183,7 +172,7 @@ export default MyProfile;
 
 const useStyles = makeStyles((theme) => ({
   leftPanel: {
-    width: '300px'
+    //width: '300px'
   },
   loader: {
     paddingTop: '15px'
