@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Grid, Paper, Tabs, Tab } from '@material-ui/core'
+import { Grid, Divider, Paper, Tabs, Tab } from '@material-ui/core'
 
 import { getIsAdmin } from 'store/user';
 import TabPanel from './tab-panel'
@@ -28,7 +28,7 @@ const MyProfile = (props) => {
     ]
 
     const adminTabs = [
-        {label: 'editace známek', url: 'typy-znamek'},
+        {label: 'správa typů známek', url: 'typy-znamek'},
         {label: 'seznam uživatelů', url: 'uzivatele'}
     ]
 
@@ -50,50 +50,39 @@ const MyProfile = (props) => {
 
 
   return (
-    <div className={classes.root}>
-        <Grid container spacing={2}>
-            <Grid item xs={12} sm={4} >
-                <Paper>
-                    <Tabs
-                        orientation={matches ? 'horizontal' : 'vertical'}
-                        value={tab}
-                        onChange={handleTabChange}
-                        className={classes.tabs}
-                    >
-                        {tabs.map((tab, i) => (
-                            <Tab key={i} label={tab.label} disabled={(i == 1 || i == 2) ? true : false} />
-                        ))}
+    <Grid container spacing={2}>
+        <Grid item xs={12} sm={4} >
+            <Paper>
+                <Tabs
+                    orientation={matches ? 'horizontal' : 'vertical'}
+                    value={tab}
+                    onChange={handleTabChange}
+                    className={classes.tabs}
+                    scrollButtons="auto"
+                    variant="scrollable"
+                >
+                    {tabs.map((tab, i) => (
+                        <Tab key={i} label={tab.label} disabled={(i == 1 || i == 2) ? true : false} />
+                    ))}
 
-                        {/*
-                        <Tab label='Historie známek' disabled />
-                        <Tab label='Platební údaje' disabled />
-                        */}
+                    {isAdmin && adminTabs.map((tab, i) => (
+                        <Tab key={i} label={tab.label} />
+                    ))}
 
-                        {isAdmin && adminTabs.map((tab, i) => (
-                            <Tab key={i} label={tab.label} />
-                        ))}
-
-                        {/*isAdmin && [
-                            <Tab key={1} label='Editace známek' onClick={() => handleChangeTab('/profil/typy-znamek')}/>,
-                            <Tab key={2} label='Seznam uživatelů' onClick={() => handleChangeTab('/profil/uzivatele')}/>
-                        ]
-                        */}
-
-                    </Tabs>
-                </Paper>
-            </Grid>
-            
-            <Grid item xs={12} sm={8}>                        
-                <TabPanel value={tab} index={0}>
-                    <UserInfo />
-                </TabPanel>
-
-                <TabPanel value={tab} index={3}>
-                    <VignetteTypesTable />
-                </TabPanel>
-            </Grid>
+                </Tabs>
+            </Paper>
         </Grid>
-    </div>
+        
+        <Grid item xs={12} sm={8}>                        
+            <TabPanel value={tab} index={0}>
+                <UserInfo />
+            </TabPanel>
+
+            <TabPanel value={tab} index={3}>
+                <VignetteTypesTable />
+            </TabPanel>
+        </Grid>
+    </Grid>
   )
 }
 
