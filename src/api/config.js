@@ -1,13 +1,10 @@
 import axios from 'axios'
 
-export default axios.create({
-    baseURL: 'http://localhost:8000/'
-    
-});
+const baseURL = (process.env.NODE_ENV !== 'production') ? 
+    'http://localhost:8000/' 
+    : 
+    'https://app-eve.herokuapp.com/';
 
-
-/*
 export default axios.create({
-    baseURL: 'https://app-eve.herokuapp.com/'
+    baseURL: baseURL
 });
-*/
