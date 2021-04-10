@@ -45,6 +45,7 @@ export const slice = createSlice({
 
 // Selectors
 export const getUser = state => state.user;
+export const getIsAdmin = () => true
   
 export default slice.reducer;
   

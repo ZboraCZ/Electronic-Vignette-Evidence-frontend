@@ -1,167 +1,96 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import TextField from '@material-ui/core/TextField';
+import { useHistory } from "react-router-dom";
+
 import { makeStyles } from '@material-ui/core/styles';
-import LoadingButton from 'components/shared/loading-button'
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import {Link} from 'react-router-dom'
-import { fetchUser } from 'api/user';
-import { getUser } from 'store/user';
-import { Card, CardHeader, Avatar, IconButton, Grid } from '@material-ui/core'
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Loader from 'components/shared/loader';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Grid, Paper, Tabs, Tab } from '@material-ui/core'
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import StarIcon from '@material-ui/icons/Star';
-
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import { getIsAdmin } from 'store/user';
+import TabPanel from './tab-panel'
+import VignetteTypesTable from './vignette-types-table'
 import UserInfo from './user-info';
 
-import DeleteIcon from '@material-ui/icons/Delete';
-import Icon from '@material-ui/core/Icon';
-import SaveIcon from '@material-ui/icons/Save';
-
-import { patchUser } from 'api/user'
-import TabPanel from './tab-panel'
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
-  
-const MyProfile = () => {
+const MyProfile = (props) => {
     
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const userState = useSelector(getUser);
-  const matches = useMediaQuery(theme => theme.breakpoints.down('xs'));
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const matches = useMediaQuery(theme => theme.breakpoints.down('xs'));
+    const isAdmin = useSelector(getIsAdmin);
 
-  const [value, setValue] = useState(0);
-  const [isEditing, setIsEditing] = useState(true);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [localUser, setLocalUser] = useState(null)
+    const [tab, setTab] = useState(0);
 
-  const open = Boolean(anchorEl);
+    const tabs = [
+        {label: 'informace', url: 'informace'},
+        {label: 'historie známek' },
+        {label: 'platební údaje' }
+    ]
 
+    const adminTabs = [
+        {label: 'editace známek', url: 'typy-znamek'},
+        {label: 'seznam uživatelů', url: 'uzivatele'}
+    ]
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleEditing = () => {
-    handleClose()
-    setIsEditing(!isEditing)
-  }
-
-  const handleChange = (event, newValue) => setValue(newValue); 
-
-  const saveChanges = () => {
-    dispatch(patchUser(localUser))  
-    setIsEditing(false)
-  }
-
-  const cancelEditing = () => {
-    setLocalUser(user)
-    setIsEditing(false)
-  }
-
-  useEffect(() => {
-    dispatch(fetchUser(1))
-  }, [dispatch]);
+    const mergedTabs = [
+        ...tabs,
+        ...adminTabs
+    ]
   
-  const { user, pending, error } = userState; 
+    useEffect(() => {
+        const { tab } = props.match.params;
+        const index = mergedTabs.findIndex(_tab => _tab.url === tab)
+        setTab(index)
+    }, [])
 
-  useEffect(() => {
-    !!user && setLocalUser(user)
-  }, [user])
+    const handleTabChange = (event, val) => {
+        setTab(val); 
+        history.push(`/profil/${mergedTabs[val].url}`)
+    }
+
 
   return (
     <div className={classes.root}>
         <Grid container spacing={2}>
             <Grid item xs={12} sm={4} >
-                <Paper className={classes.leftPanel}>
+                <Paper>
                     <Tabs
                         orientation={matches ? 'horizontal' : 'vertical'}
-                        value={value}
-                        onChange={handleChange}
+                        value={tab}
+                        onChange={handleTabChange}
                         className={classes.tabs}
                     >
-                        <Tab label='Informace' />
-                        <Tab label='Historie známek' />
-                        <Tab label='Platební údaje' />
+                        {tabs.map((tab, i) => (
+                            <Tab key={i} label={tab.label} disabled={(i == 1 || i == 2) ? true : false} />
+                        ))}
+
+                        {/*
+                        <Tab label='Historie známek' disabled />
+                        <Tab label='Platební údaje' disabled />
+                        */}
+
+                        {isAdmin && adminTabs.map((tab, i) => (
+                            <Tab key={i} label={tab.label} />
+                        ))}
+
+                        {/*isAdmin && [
+                            <Tab key={1} label='Editace známek' onClick={() => handleChangeTab('/profil/typy-znamek')}/>,
+                            <Tab key={2} label='Seznam uživatelů' onClick={() => handleChangeTab('/profil/uzivatele')}/>
+                        ]
+                        */}
+
                     </Tabs>
                 </Paper>
             </Grid>
             
-            <Grid item xs={12} sm={8}>
-                <Grid container>                    
-                    <Paper className={classes.paper}>
-                    {
-                        (!localUser || pending) ? <Loader className={classes.loader}/> : (
-                        <Grid container>
-                            <Grid item xs={11}>
-                                <TabPanel value={value} index={0} className={classes.content}>
-                                    <UserInfo user={localUser} setUser={user => setLocalUser(user)} isEditing={isEditing} />
-                                </TabPanel>
-                            </Grid>
+            <Grid item xs={12} sm={8}>                        
+                <TabPanel value={tab} index={0}>
+                    <UserInfo />
+                </TabPanel>
 
-                            <Grid item xs={1}>
-                                {!isEditing && (
-                                <>
-                                    <IconButton aria-label='settings' onClick={handleClick}>  
-                                        <MoreVertIcon />
-                                    </IconButton>
-                                    
-                                    <Menu
-                                        id="long-menu"
-                                        anchorEl={anchorEl}
-                                        keepMounted
-                                        open={open}
-                                        onClose={handleClose}
-                                    >
-                                        <MenuItem onClick={() => handleEditing()}>Editovat</MenuItem>
-                                    </Menu>
-                                </>
-                                )}
-                            </Grid>
-                            {isEditing && (
-                                <Grid item xs={12}>
-                                    <Grid container justify='flex-end' className={classes.actionButtons}>
-                                        <Button
-                                            variant="outlined"
-                                            color="secondary"
-                                            className={classes.actionButton}
-                                            onClick={cancelEditing}
-                                        >
-                                            Zrušit
-                                        </Button>
-
-                                        <LoadingButton
-                                            variant="outlined"
-                                            color="primary"
-                                            className={classes.actionButton}
-                                            onClick={saveChanges}
-                                            loading={pending}
-                                        >
-                                            Uložit změny    
-                                        </LoadingButton>
-                                    </Grid>
-                                </Grid>
-                            )}
-                        </Grid>
-                    )}
-                    </Paper>
-                </Grid>
+                <TabPanel value={tab} index={3}>
+                    <VignetteTypesTable />
+                </TabPanel>
             </Grid>
         </Grid>
     </div>
@@ -171,30 +100,5 @@ const MyProfile = () => {
 export default MyProfile;
 
 const useStyles = makeStyles((theme) => ({
-  leftPanel: {
-    //width: '300px'
-  },
-  loader: {
-    paddingTop: '15px'
-  },
-  paper: {
-    paddingTop: 0,
-    paddingRight: 0,
-    paddingLeft: theme.spacing(4),
-    paddingBottom: theme.spacing(2),
-    width: '100%',
-    height: 'auto'
-  },
-  actionButtons: {
-    paddingRight: theme.spacing(2)
-  },
-  actionButton: {
-    marginLeft: theme.spacing(2)
-  },
-  content: {
-    paddingTop: theme.spacing(4)
-  },
-  label: {
-    color: theme.palette.text.secondary
-  }
+
 }));
