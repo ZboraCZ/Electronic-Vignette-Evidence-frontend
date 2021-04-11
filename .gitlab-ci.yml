@@ -1,0 +1,24 @@
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - install
+  - build
+  - deploy
+
+install:
+  stage: install
+  image: node:latest 
+  script:
+    - npm install
+
+build:
+  stage: build
+  image: node:latest
+  script:
+    - npm build
+
+deploy:
+  stage: deploy
+
