@@ -61,6 +61,7 @@ const VignetteTypesTable = () => {
 
   const saveChanges = () => {
     dispatch(patchVignetteType(localType))
+    setEditingRow(null)
   }
 
   const { types, pending, error } = vignetteState;

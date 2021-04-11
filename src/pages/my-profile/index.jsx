@@ -10,6 +10,7 @@ import { getIsAdmin } from 'store/user';
 import TabPanel from './tab-panel'
 import VignetteTypesTable from './vignette-types-table'
 import UserInfo from './user-info';
+import ManageUsers from './manage-users';
 
 const MyProfile = (props) => {
     
@@ -23,7 +24,7 @@ const MyProfile = (props) => {
 
     const tabs = [
         {label: 'informace', url: 'informace'},
-        {label: 'historie známek' },
+        {label: 'historie zakoupených známek' },
         {label: 'platební údaje' }
     ]
 
@@ -81,6 +82,11 @@ const MyProfile = (props) => {
             <TabPanel value={tab} index={3}>
                 <VignetteTypesTable />
             </TabPanel>
+
+            <TabPanel value={tab} index={4}>
+                <ManageUsers />
+            </TabPanel>
+
         </Grid>
     </Grid>
   )
