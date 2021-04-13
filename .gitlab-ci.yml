@@ -1,20 +1,9 @@
-cache:
-  paths:
-    - node_modules/
-
 stages:
   - install
-  - build
 
 install:
   stage: install
-  image: node:latest 
   script:
-    - npm install
+    - echo 'dobry den'
 
-build:
-  stage: build
-  image: node:latest
-  script:
-    - npm build
 
