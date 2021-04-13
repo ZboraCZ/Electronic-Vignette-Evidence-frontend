@@ -4,6 +4,6 @@ stages:
 install:
   stage: install
   script:
-    - echo 'dobry den'
+    - npm install
 
 
