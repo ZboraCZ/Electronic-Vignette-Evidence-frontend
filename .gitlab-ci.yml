@@ -2,6 +2,8 @@ stages:
   - install
 
 install:
-  stage: install 
+  stage: install
   script:
-    - echo "bry den"
+    - npm install
+
+
