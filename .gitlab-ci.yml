@@ -1,9 +1,0 @@
-stages:
-  - install
-
-install:
-  stage: install
-  script:
-    - npm install
-
-
