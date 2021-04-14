@@ -1,4 +1,5 @@
 import { createSlice, createAction } from '@reduxjs/toolkit';
+import { postRegistration } from 'api/auth';
 
 import { set, get, remove } from 'utils/localstore'
 
@@ -28,7 +29,19 @@ export const slice = createSlice({
 
     },
     extraReducers: {
-
+         // register User
+         [postRegistration.pending]: (state, action) => {
+            state.pending = true
+        },
+        [postRegistration.fulfilled]: (state, action) => {
+            state.pending = false
+            state.token = action.payload
+        },
+        [postRegistration.rejected]: (state, action) => {
+            console.log(action)
+            state.pending = false
+            state.error = action.payload || action.error
+        }
     }
 });
 
