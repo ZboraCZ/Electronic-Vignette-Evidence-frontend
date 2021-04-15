@@ -4,13 +4,15 @@ import { useHistory } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Grid, Divider, Paper, Tabs, Tab } from '@material-ui/core'
+import { Grid, Paper, Tabs, Tab } from '@material-ui/core'
 
 import { getIsAdmin } from 'store/user';
 import TabPanel from './tab-panel'
 import VignetteTypesTable from './vignette-types-table'
 import UserInfo from './user-info';
 import ManageUsers from './manage-users';
+import Overview from 'pages/overview';
+import { tabs, adminTabs } from './user-tabs'
 
 const MyProfile = (props) => {
     
@@ -22,26 +24,23 @@ const MyProfile = (props) => {
 
     const [tab, setTab] = useState(0);
 
-    const tabs = [
-        {label: 'informace', url: 'informace'},
-        {label: 'historie zakoupených známek' },
-        {label: 'platební údaje' }
-    ]
-
-    const adminTabs = [
-        {label: 'správa typů známek', url: 'typy-znamek'},
-        {label: 'seznam uživatelů', url: 'uzivatele'}
-    ]
-
     const mergedTabs = [
         ...tabs,
         ...adminTabs
     ]
-  
-    useEffect(() => {
+
+    const switchToSelectedTab = () => {
         const { tab } = props.match.params;
         const index = mergedTabs.findIndex(_tab => _tab.url === tab)
         setTab(index)
+    }
+
+    useEffect(() => {
+        switchToSelectedTab()
+    }, [props.match.params])
+  
+    useEffect(() => {
+        switchToSelectedTab()
     }, [])
 
     const handleTabChange = (event, val) => {
@@ -63,7 +62,7 @@ const MyProfile = (props) => {
                     variant="scrollable"
                 >
                     {tabs.map((tab, i) => (
-                        <Tab key={i} label={tab.label} disabled={(i == 1 || i == 2) ? true : false} />
+                        <Tab key={i} label={tab.label} disabled={tab.isDisabled} />
                     ))}
 
                     {isAdmin && adminTabs.map((tab, i) => (
@@ -74,8 +73,12 @@ const MyProfile = (props) => {
             </Paper>
         </Grid>
         
-        <Grid item xs={12} sm={8}>                        
+        <Grid item xs={12} sm={8}>        
             <TabPanel value={tab} index={0}>
+                <Overview />
+            </TabPanel>      
+                     
+            <TabPanel value={tab} index={1}>
                 <UserInfo />
             </TabPanel>
 

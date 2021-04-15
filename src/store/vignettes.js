@@ -38,7 +38,6 @@ export const slice = createSlice({
             state.error = action.payload || true
         }
 
-
     }
 });
 

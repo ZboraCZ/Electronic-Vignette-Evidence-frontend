@@ -1,24 +1,19 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, FormGroup, FormControlLabel, Switch } from '@material-ui/core';
+import { AppBar, Toolbar } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import Wrapper from 'components/shared/wrapper';
-import { getIsAuth, login, logout } from 'store/auth';
+import { getIsAuth} from 'store/auth';
 import MobileBar from './mobile-bar'
 import DesktopBar from './desktop-bar'
 
 const Navbar = (props) => {
 
-  const [isMobile, setMobile] = useState(false)
-
+  
   const classes = useStyles()
-
-  const dispatch = useDispatch()
-  const auth = useSelector(getIsAuth)
-
-  const handleAuth = auth => {
-    dispatch(auth ? login() : logout())
-  }
+  const isAuth = useSelector(getIsAuth)
+  
+  const [isMobile, setMobile] = useState(false)
 
   useEffect(() => {
     const setResponsiveness = () => {
@@ -32,16 +27,10 @@ const Navbar = (props) => {
 
   return (
     <>
-      <FormGroup className={classes.fakeAuth}>
-        <FormControlLabel
-          control={<Switch checked={auth} onChange={() => handleAuth(!auth)} aria-label="login switch" />}
-          label={auth ? 'Logout' : 'Login'}
-        />
-      </FormGroup>
       <AppBar className={classes.navbar}>   
         <Toolbar disableGutters className={classes.toolbar}>  
           <Wrapper className={classes.NavbarWrapper}>  
-            {isMobile ? <MobileBar /> : <DesktopBar />}
+            {isMobile ? <MobileBar /> : <DesktopBar isAuth={isAuth} />}
           </Wrapper>
         </Toolbar>
       </AppBar>

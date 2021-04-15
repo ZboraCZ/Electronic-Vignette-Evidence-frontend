@@ -54,7 +54,7 @@ const Home = () => {
                   <Button 
                     variant="contained" 
                     color="primary"
-                    to='/prehled'
+                    to='/profil/zakoupene-znamky'
                     component={Link}
                     size='large'
                   >

@@ -25,7 +25,7 @@ export const PublicRoute = ({component: Component, restricted, ...rest}) => {
     return (
         <Route {...rest} render={props => (
             isAuth && restricted ?
-                <Redirect to='/prehled' />
+                <Redirect to='/profil/zakoupene-znamky' />
             : <Component {...props} />
         )} />
     );
