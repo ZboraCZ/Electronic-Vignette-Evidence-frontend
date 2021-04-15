@@ -1,13 +1,18 @@
+import { useEffect, lazy } from 'react'
 import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux'
-import { lazy } from 'react';
 import { getIsAuth } from 'store/auth';
+import { setTitle } from 'utils/title';
 
 export const lazyImport = (component) => lazy(() => import(`pages/${component}`));
 
-export const PrivateRoute = ({component: Component, ...rest}) => {
+export const PrivateRoute = ({component: Component, title, ...rest}) => {
     
     const isAuth = useSelector(getIsAuth);
+
+    useEffect(() => {
+        setTitle(title);
+    }, []);
 
     return (
         <Route {...rest} render={props => (
@@ -18,9 +23,13 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
     );
 };
 
-export const PublicRoute = ({component: Component, restricted, ...rest}) => {
+export const PublicRoute = ({component: Component, restricted, title, ...rest}) => {
 
-    const isAuth =  useSelector(getIsAuth);
+    const isAuth = useSelector(getIsAuth);
+
+    useEffect(() => {
+        setTitle(title);
+    }, []);
     
     return (
         <Route {...rest} render={props => (

@@ -8,12 +8,25 @@ import { privateRoutes, publicRoutes } from './route-list';
 const AppRouter = () => (
     <Suspense fallback={<Loader />}>
         <Switch>
-            {publicRoutes.map(({ route, component, restricted }, i) => (
-                <PublicRoute restricted={!!restricted} component={lazyImport(component)} path={`/${route}`} exact key={i} /> 
+            {publicRoutes.map(({ route, component, restricted, title }, i) => (
+                <PublicRoute 
+                    title={title}
+                    restricted={!!restricted} 
+                    component={lazyImport(component)} 
+                    path={`/${route}`} 
+                    exact 
+                    key={i} 
+                /> 
             ))}
 
-            {privateRoutes.map(({ route, component }, i) => (
-                <PrivateRoute component={lazyImport(component)} path={`/${route}`} exact key={i} /> 
+            {privateRoutes.map(({ route, component, title }, i) => (
+                <PrivateRoute 
+                    title={title}
+                    component={lazyImport(component)} 
+                    path={`/${route}`} 
+                    exact 
+                    key={i} 
+                /> 
             ))}
 
             <PublicRoute restricted={false} component={lazyImport('not-found')} path={'*'} exact />
