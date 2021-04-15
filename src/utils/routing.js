@@ -1,7 +1,7 @@
 import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import { lazy } from 'react';
-import { getIsAuth } from 'store/auth'
+import { getIsAuth } from 'store/auth';
 
 export const lazyImport = (component) => lazy(() => import(`pages/${component}`));
 

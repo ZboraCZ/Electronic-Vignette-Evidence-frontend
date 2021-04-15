@@ -19,7 +19,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { fetchVignetteTypes, patchVignetteType } from 'api/vignette-types';
 import { vignetteTypes } from 'store/vignettes';
 import Loader from 'components/shared/loader';
-import { keys } from '@material-ui/core/styles/createBreakpoints';
+
 
 
 const VignetteTypesTable = () => {
@@ -64,7 +64,7 @@ const VignetteTypesTable = () => {
     setEditingRow(null)
   }
 
-  const { types, pending, error } = vignetteState;
+  const { types, pending } = vignetteState;
 
   if (!types || pending)
     return <Loader />

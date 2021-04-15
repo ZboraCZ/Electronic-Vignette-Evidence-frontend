@@ -1,45 +1,51 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import LoadingButton from 'components/shared/loading-button'
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-
-import { useParams } from 'react-router-dom'
-import Grid from '@material-ui/core/Grid';
-import { vignetteTypeById } from 'store/vignettes';
-import { fetchVignetteTypes } from 'api/vignette-types';
-import { useDispatch, useSelector } from 'react-redux';
 import 'date-fns';
+import Grid from '@material-ui/core/Grid';
 import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import csLocale from "date-fns/locale/cs";
-import LicensePlateValidator from 'components/shared/license-plate-validator'
-import Loader from 'components/shared/loader';
-import { fetchVignetteValidate } from 'api/vignettes';
 import Tooltip from '@material-ui/core/Tooltip';
-
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 
+import { fetchVignetteTypes } from 'api/vignette-types';
+import { vignetteTypeById } from 'store/vignettes';
+import LicensePlateValidator from 'components/shared/license-plate-validator'
+import Loader from 'components/shared/loader';
+import { fetchVignetteValidate, postVignetteBuy } from 'api/vignettes';
+import { getUser } from 'store/user';
+import { getIsAuth } from 'store/auth';
+
+
 const Purchase = () => {
   
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [validFrom, setValidFrom] = useState(null)
-  
-  const [vignetteFree, setVignetteFree] = useState(null);
-  const [isFetching, setIsFetching] = useState(null);
-  const [lp, setLP] = useState(null);
   const classes = useStyles();
   const dispatch = useDispatch();
   const { id } = useParams(); 
-  
   const vignetteType = useSelector(state => vignetteTypeById(state, Number(id)));
+  const isAuth = useSelector(getIsAuth);
+  const userState = useSelector(getUser)
+  
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [validFrom, setValidFrom] = useState(null)
+  const [vignetteFree, setVignetteFree] = useState(null);
+  const [isFetching, setIsFetching] = useState(null);
+  const [lp, setLP] = useState(null);
 
+
+  
   useEffect(() => {
     dispatch(fetchVignetteTypes())
   }, [dispatch]);
@@ -54,6 +60,26 @@ const Purchase = () => {
     setSelectedDate(date);
   };
 
+  const buyVignette = () => {
+
+    const { user } = userState;
+
+    let vignetteBuy = {
+      id_vignette_type: id,
+      valid_from: selectedDate
+    }
+
+    if (isAuth && user) {
+      vignetteBuy = {
+        ...vignetteBuy,
+        id_user: user.id
+      }
+    } 
+    const cleanLP = lp.replace(/\s/g, '')
+    dispatch(postVignetteBuy({ licensePlate: cleanLP, vignette: vignetteBuy })) 
+       
+  }
+
   const validFormat = (lp) => {
     if (lp) {
       setIsFetching(true)
@@ -67,7 +93,7 @@ const Purchase = () => {
           setVignetteFree(true)
           setIsFetching(false)
         })
-      }, 1500)
+      }, 500)
     
     } else {
       setVignetteFree(null)
@@ -194,6 +220,7 @@ const Purchase = () => {
                 variant="contained" 
                 className={classes.loadingButton}
                 disabled={!(validFrom && vignetteFree)}
+                onClick={buyVignette}
               >
                 Zakoupit
               </LoadingButton>

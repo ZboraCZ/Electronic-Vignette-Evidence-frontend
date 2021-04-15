@@ -45,7 +45,7 @@ export const slice = createSlice({
             state.isAuth = false;
             state.newly_registered = true;
             set('token', state.token)
-            setAuthHeader(axios, token)
+            setAuthHeader(axios, state.token)
         },
         [postRegistration.rejected]: (state, action) => {
             state.pending = false
@@ -63,7 +63,7 @@ export const slice = createSlice({
             state.token = action.payload.accessToken;
             state.isAuth = true
             set('token', state.token)
-            setAuthHeader(axios, token)
+            setAuthHeader(axios, state.token)
         },
         [postLogin.rejected]: (state, action) => {
             state.pending = false

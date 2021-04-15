@@ -2,12 +2,11 @@ import { useEffect, useState, Fragment} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Typography, Grid, TextField, MenuItem, Menu, IconButton, Button, Paper } from '@material-ui/core'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { fetchUser } from 'api/user';
-import { getUser, getIsAdmin } from 'store/user';
+import { getUser } from 'store/user';
 import { patchUser } from 'api/user'
 import LoadingButton from 'components/shared/loading-button'
 import Loader from 'components/shared/loader';

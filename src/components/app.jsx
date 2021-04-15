@@ -4,10 +4,20 @@ import Footer from 'components/footer'
 import Wrapper from 'components/shared/wrapper'
 
 import { makeStyles } from '@material-ui/core/styles'
+import { fetchUser } from 'api/user';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getIsAuth } from 'store/auth';
 
 
 const App = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const isAuth = useSelector(getIsAuth);
+
+  useEffect(() => {
+    isAuth && dispatch(fetchUser(1))
+  }, [isAuth])
 
   return (
     <div className={classes.app}>

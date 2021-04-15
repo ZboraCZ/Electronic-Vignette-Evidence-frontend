@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useHistory } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +17,6 @@ import { tabs, adminTabs } from './user-tabs'
 const MyProfile = (props) => {
     
     const classes = useStyles();
-    const dispatch = useDispatch();
     const history = useHistory();
     const matches = useMediaQuery(theme => theme.breakpoints.down('xs'));
     const isAdmin = useSelector(getIsAdmin);

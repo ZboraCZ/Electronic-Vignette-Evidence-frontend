@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Wrapper from 'components/shared/wrapper';
 import { getIsAuth} from 'store/auth';
 import MobileBar from './mobile-bar'
