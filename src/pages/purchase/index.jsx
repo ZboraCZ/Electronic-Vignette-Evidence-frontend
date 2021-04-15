@@ -45,7 +45,7 @@ const Purchase = () => {
   }, [dispatch]);
   
   useEffect(() => {
-    if(lp && lp.length == 0)
+    if(lp && lp.length === 0)
       setVignetteFree(null)
 
   }, [lp]);

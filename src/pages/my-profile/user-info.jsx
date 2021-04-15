@@ -16,11 +16,8 @@ import Loader from 'components/shared/loader';
 const UserInfo = () => {
     
     const classes = useStyles();
-            
     const dispatch = useDispatch();
     const userState = useSelector(getUser);
-    const isAdmin = useSelector(getIsAdmin);
-    const matches = useMediaQuery(theme => theme.breakpoints.down('xs'));
     
     const [isEditing, setIsEditing] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
