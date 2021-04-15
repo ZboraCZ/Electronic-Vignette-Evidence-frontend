@@ -1,7 +1,7 @@
 import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import { lazy } from 'react';
-import { getIsAuth } from 'store/auth'
+import { getIsAuth, isNewlyRegistered } from 'store/auth'
 
 export const lazyImport = (component) => lazy(() => import(`pages/${component}`));
 
@@ -25,7 +25,7 @@ export const PublicRoute = ({component: Component, restricted, ...rest}) => {
     return (
         <Route {...rest} render={props => (
             isAuth && restricted ?
-                <Redirect to='/prehled' />
+                <Redirect to='/profil/zakoupene-znamky' />
             : <Component {...props} />
         )} />
     );

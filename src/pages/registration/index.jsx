@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -8,23 +8,49 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Alert from '@material-ui/lab/Alert';
 
 import LoadingButton from 'components/shared/loading-button'
+import Loader from 'components/shared/loader';
 import { onEnterEvent } from 'utils/event'
 import { postRegistration } from 'api/auth'
+import { getAuthError, isNewlyRegistered, login } from 'store/auth'
 
 const Registration = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const authError = useSelector(getAuthError);
+  const newlyRegistered = useSelector(isNewlyRegistered);
+  const authPending = useSelector(state => state.auth.pending)
 
   const [creds, setCreds] = useState({
-    email: 'test@test.cz',
-    first_name: 't1',
-    last_name: 't2',
-    phone: '123456789',
-    password: 'test',
-    passwordConfirm: 'test'
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    password: '',
+    passwordConfirm: ''
   })
+
+  const [errors, setErrors] = useState({})
+
+  useEffect(() => {
+    setErrors(authError)
+  }, [authError])
+
+  const formLabels = {
+    email: 'Email',
+    first_name: 'Jméno',
+    last_name: 'Příjmení',
+    phone: 'Telefon',
+    password: 'Heslo',
+    passwordConfirm: 'Heslo potvrzení'
+  }
+
+  const formTypes = {
+    password: 'password',
+    passwordConfirm: 'password'
+  }
 
   useState(() => {
     onEnterEvent(() => register())
@@ -36,7 +62,51 @@ const Registration = () => {
       [target.name]: target.value
   }))
 
-  const register = () => dispatch(postRegistration(creds))
+  const helperErrorText = (name) => {
+    if (!!Object.keys(errors).length && name in errors)
+      return errors[name].reduce((acc, cur) => acc += cur);
+  }
+
+  const register = () => {
+    const { password, passwordConfirm } = creds;
+    if (password !== passwordConfirm) {
+      setErrors(errors => ({
+        ...errors,
+        password: ['Hesla se neshodují'],
+        passwordConfirm: ['Hesla se neshodují']
+      }))
+    } else
+      dispatch(postRegistration(creds))
+  }
+
+  const toAdministration = () => dispatch(login())
+  
+  if (authPending)
+    return <Loader />
+
+
+  if (newlyRegistered) 
+    return (
+      <div className={classes.root}>
+        <div className={classes.newlyRegistered}>
+          <Alert 
+            action={
+              <Button 
+                onClick={toAdministration}
+                variant='contained'
+                className={classes.successButton}
+              >
+                Přejít do administrace
+              </Button>
+            }
+          >
+            <Typography variant="subtitle1" gutterBottom>
+              Úspěšná registrace
+            </Typography>
+          </Alert>
+        </div>
+      </div>
+    )
  
   return (
     <div className={classes.root}>
@@ -45,62 +115,22 @@ const Registration = () => {
         Registrace
       </Typography>
       <Grid container spacing={1}>
-        <Grid item xs={6}>
-          <TextField fullWidth
-            name="firstName"
-            label="Jméno"
-            variant="outlined"
-            value={creds.firstName}
-            onChange={handleCreds}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField fullWidth
-            name="lastName"
-            label="Přijmení"
-            variant="outlined"
-            value={creds.lastName}
-            onChange={handleCreds}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField fullWidth
-            name="email"
-            label="Email"
-            variant="outlined"
-            value={creds.email}
-            onChange={handleCreds}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField fullWidth
-            name="phone"
-            label="Telefon"
-            variant="outlined"
-            value={creds.phone}
-            onChange={handleCreds}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField fullWidth
-            name="password"
-            type='password'
-            label="Heslo"
-            variant="outlined"
-            value={creds.password}
-            onChange={handleCreds}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField fullWidth
-            name="passwordConfirm"
-            type='password'
-            label="Heslo potvrzení"
-            variant="outlined"
-            value={creds.passwordConfirm}
-            onChange={handleCreds}
-          />
-        </Grid>
+        {Object.keys(creds).map((cred, i) => (
+          <Grid item xs={6} key={i}>
+            <TextField 
+              name={cred}
+              label={formLabels[cred]}
+              value={creds[cred]}
+              onChange={handleCreds}
+              error={!!errors[cred]}
+              helperText={helperErrorText(cred)}
+              type={!!formTypes[cred] ? formTypes[cred] : 'text'}
+              variant='outlined'
+              fullWidth
+              required 
+            />
+          </Grid>
+        ))}
       </Grid>
       <div className={classes.rightButton}>
         <LoadingButton 
@@ -139,6 +169,14 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: "column",
     justifyContent: "space-between",
+  },
+  newlyRegistered: {
+    width: '600px',
+    height: '200px',
+    padding: '30px',
+  },
+  successButton: {
+    background: theme.palette.success.main
   },
   description: {
     textAlign: 'center',

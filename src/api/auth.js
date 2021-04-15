@@ -14,3 +14,18 @@ export const postRegistration = createAsyncThunk(
             return rejectWithValue(err.response.error || err)
         }
 })
+
+export const postLogin = createAsyncThunk(
+    'auth/postLogin',
+    async (credentials, { rejectWithValue }) => {
+
+        try {
+            
+            const response = await axios.post(`auth/login`, credentials)
+            return response.data;
+            
+        } catch (err) {
+            return rejectWithValue(err.response.error || err)
+        }
+})
+

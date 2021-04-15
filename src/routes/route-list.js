@@ -9,7 +9,6 @@ export const publicRoutes = [
 ]
 
 export const privateRoutes = [
-    {route: 'prehled', component: 'overview'},
     {route: 'profil/:tab', component: 'my-profile'},
 ]
 

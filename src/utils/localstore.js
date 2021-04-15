@@ -1,9 +1,9 @@
 export const get = (key) => {
- return JSON.parse(localStorage.getItem(key))
+ return localStorage.getItem(key)
 }
 
 export const set = (key, data) => {
-    localStorage.setItem(key, JSON.stringify(data))
+    localStorage.setItem(key, data)
 }
 
 export const remove = (key) => {
