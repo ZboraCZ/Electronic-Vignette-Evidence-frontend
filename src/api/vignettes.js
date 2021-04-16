@@ -5,8 +5,8 @@ export const postVignetteBuy = createAsyncThunk(
     'vignettes/postVignetteBuy',
     async ({ licensePlate, vignette }, { rejectWithValue }) => {
         try {
-            
-            const response = await axios.post(`vignettes/${licensePlate}/buy`, vignette)
+            const buyType = 'id_user' in vignette ? 'buy' : 'quick-buy'
+            const response = await axios.post(`vignettes/${licensePlate}/${buyType}`, vignette)
             return response.data;
             
         

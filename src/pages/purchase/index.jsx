@@ -52,9 +52,7 @@ const Purchase = () => {
   }, [dispatch]);
   
   useEffect(() => {
-    if(lp && lp.length === 0)
-      setVignetteFree(null)
-
+    (lp && lp.length === 0) && setVignetteFree(null)
   }, [lp]);
 
   const handleDateChange = (date) => {
@@ -76,6 +74,7 @@ const Purchase = () => {
         id_user: user.id
       }
     } 
+
     const cleanLP = lp.replace(/\s/g, '')
     dispatch(
       postVignetteBuy({ licensePlate: cleanLP, vignette: vignetteBuy })).then(({ meta }) => {
@@ -113,7 +112,7 @@ const Purchase = () => {
         <Paper className={classes.successPaper}>
         <Alert severity="success">
           <AlertTitle>Úspěch</AlertTitle>
-          Elektronická známa byla úspěšně zakoupena na <strong>{lp}</strong>
+          Elektronická známa byla úspěšně zakoupena na SPZ: <strong>{lp}</strong>
         </Alert>
         </Paper>
       </div>
