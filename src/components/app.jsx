@@ -1,12 +1,13 @@
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { makeStyles } from '@material-ui/core/styles'
 import Navbar from 'components/navbar'
 import Router from 'routes'
 import Footer from 'components/footer'
 import Wrapper from 'components/shared/wrapper'
 
-import { makeStyles } from '@material-ui/core/styles'
 import { fetchUser } from 'api/user';
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { getIsAuth } from 'store/auth';
 
 
@@ -17,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     isAuth && dispatch(fetchUser(1))
-  }, [isAuth])
+  }, [isAuth, dispatch])
 
   return (
     <div className={classes.app}>
@@ -27,7 +28,7 @@ const App = () => {
           <Router />
         </Wrapper>
       </main>
-      <Footer />
+      <Footer />  
     </div>
   )
 }
