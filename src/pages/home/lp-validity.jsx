@@ -28,7 +28,6 @@ const LPValidity = () => {
         .then(res => {
           setVignetteFree(true)
           setLoading(false);
-          console.log(res.data[0])
           /*
           setValidVignette(prevState => ({
             ...prevState,

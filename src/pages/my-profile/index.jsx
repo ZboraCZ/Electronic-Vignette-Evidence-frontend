@@ -67,7 +67,6 @@ const MyProfile = (props) => {
                     {isAdmin && adminTabs.map((tab, i) => (
                         <Tab key={i} label={tab.label} />
                     ))}
-
                 </Tabs>
             </Paper>
         </Grid>
@@ -81,14 +80,13 @@ const MyProfile = (props) => {
                 <UserInfo />
             </TabPanel>
 
-            <TabPanel value={tab} index={3}>
+            <TabPanel value={tab} index={4}>
                 <VignetteTypesTable />
             </TabPanel>
 
-            <TabPanel value={tab} index={4}>
+            <TabPanel value={tab} index={5}>
                 <ManageUsers />
             </TabPanel>
-
         </Grid>
     </Grid>
   )

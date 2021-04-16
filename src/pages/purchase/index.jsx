@@ -19,6 +19,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { fetchVignetteTypes } from 'api/vignette-types';
 import { vignetteTypeById } from 'store/vignettes';
@@ -43,7 +44,7 @@ const Purchase = () => {
   const [vignetteFree, setVignetteFree] = useState(null);
   const [isFetching, setIsFetching] = useState(null);
   const [lp, setLP] = useState(null);
-
+  const [buySuccess, setBuySuccess] = useState(false);
 
   
   useEffect(() => {
@@ -76,7 +77,10 @@ const Purchase = () => {
       }
     } 
     const cleanLP = lp.replace(/\s/g, '')
-    dispatch(postVignetteBuy({ licensePlate: cleanLP, vignette: vignetteBuy })) 
+    dispatch(
+      postVignetteBuy({ licensePlate: cleanLP, vignette: vignetteBuy })).then(({ meta }) => {
+        meta.requestStatus === 'fulfilled' && setBuySuccess(true) 
+      })
        
   }
 
@@ -102,6 +106,18 @@ const Purchase = () => {
 
   if (!vignetteType) 
     return <Loader />
+
+  if (buySuccess) 
+    return (
+      <div className={classes.root}>
+        <Paper className={classes.successPaper}>
+        <Alert severity="success">
+          <AlertTitle>Úspěch</AlertTitle>
+          Elektronická známa byla úspěšně zakoupena na <strong>{lp}</strong>
+        </Alert>
+        </Paper>
+      </div>
+    )
 
   return (
     <div className={classes.root}>
@@ -151,7 +167,7 @@ const Purchase = () => {
               </Grid>     
             </Grid>
 
-            <Typography variant='subtitle1'>
+            <Typography variant='subtitle1' className={classes.alreadyExists}>
               {vignetteFree === false && (
                 `Na SPZ je již zakoupená dálniční známka`
               )}
@@ -248,8 +264,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     textAlign: 'center'
   },
+  successPaper: {
+    width: '600px',
+    height: 'auto'
+  },
   loadingButton: {
     width: '150px',
+  },
+  alreadyExists: {
+    color: theme.palette.error.main
   },
   spz: {
     width: '200px'
@@ -263,7 +286,7 @@ const useStyles = makeStyles((theme) => ({
   },
   section: {
     marginTop: '15px',
-    marginBottom: '15px'
+    marginBottom: '25px'
   },
   datePicker: {
     marginBottom: '15px'
