@@ -16,7 +16,18 @@ export const postVignetteBuy = createAsyncThunk(
         
 })
 
-
 export const fetchVignetteValidate = (licensePlate) => axios.get(`vignettes/${licensePlate}`)
 
+export const postVignetteExtend = createAsyncThunk(
+    'vignettes/postVignetteExtend',
+    async ({ vignetteId, days }, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`vignettes/${vignetteId}/extend`, days)
+            return response.data;
+        
+        } catch (err) {
+            return rejectWithValue(err.response.error)
+        }
+        
+})
 
