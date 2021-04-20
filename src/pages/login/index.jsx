@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 
@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 
 import LoadingButton from 'components/shared/loading-button'
 import { postLogin } from 'api/auth'; 
@@ -20,18 +21,28 @@ const Login = () => {
     password: ''
   })
   
+  const [authErr, setAuthErr] = useState(null);
+
   const handleCreds = ({ target }) => 
     setCreds(prevState => ({
       ...prevState,
       [target.name]: target.value
   }))
+
+
   
-  const handleLogin = () => dispatch(postLogin(creds))
+  const handleLogin = () => {
+    
+    dispatch(postLogin(creds)).then(({ payload }) => {
+      !!payload?.response?.data && setAuthErr(payload.response.data)
+    })
+  
+  }
   
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} style={authErr && {height: '500px'}}>
         <Typography variant="h5" gutterBottom>
           Přihlášení
         </Typography>
@@ -52,6 +63,12 @@ const Login = () => {
           type='password'
           variant="outlined"
         />
+
+        {(authErr && authErr.error === 'AUTH_ERROR') && (
+            <Alert variant="outlined" severity="error">
+              Email nebo heslo není správné. 
+            </Alert>
+        )}
         
         <LoadingButton 
           onClick={handleLogin}
