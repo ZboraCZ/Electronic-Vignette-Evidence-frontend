@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUser, patchUser } from 'api/user';
+import { fetchUser, patchUser, fetchUserVignettes } from 'api/user';
 
 // Reducer
 export const slice = createSlice({
     name: 'user',
     initialState: {
         user: null,
+        vignettes: null,
         error: false,
         pending: false
     },
@@ -39,12 +40,27 @@ export const slice = createSlice({
         [patchUser.rejected]: (state, action) => {
             state.pending = false
             state.error = action.payload || action.error
+        },
+
+        // Get User Vignettes
+        [fetchUserVignettes.pending]: (state, action) => {
+            state.pending = true
+        },
+        [fetchUserVignettes.fulfilled]: (state, action) => {
+            state.pending = false
+            state.vignettes = action.payload
+        },
+        [fetchUserVignettes.rejected]: (state, action) => {
+            state.pending = false
+            state.error = action.payload || action.error
         }
+        
     }
 });
 
 // Selectors
 export const getUser = state => state.user;
+export const getVignettes = state => state.vignettes;
 export const getIsAdmin = () => true
   
 export default slice.reducer;

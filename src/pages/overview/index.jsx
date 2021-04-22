@@ -1,14 +1,28 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+
 import { Grid } from '@material-ui/core';
+import { fetchUserVignettes } from 'api/user';
+import { getVignettes } from 'store/user';
 
 import Vignette from 'components/vignette'
+import Alert from 'components/shared/alert';
 import Loader from 'components/shared/loader'
 
 import Modal from 'components/modal'
 
 const Overview = () => {
+  const dispatch = useDispatch()
+  const vignettesState = useSelector(getVignettes)
+  
+  useEffect(() => {
+    dispatch(fetchUserVignettes())
+  }, [dispatch])
+
+  const { vignettes, pending, error } = vignettesState;
 
     //mocked vignette
-    const vignettes = [{
+    /*const vignettes = [{
         vignetteId: 0,
         licensePlate: '4A2 3000',
         serialNumber: 'XXX',
@@ -21,18 +35,20 @@ const Overview = () => {
         },
         usedId: 0,
         validFrom: '2021-03-27'
-    }]
+    }]*/
     
-    
-    if (!vignettes.length)
+    if (pending)
         return <Loader />
+
+    else if (error)
+        return <Alert error={error} />
 
     return (
         <div>
             <Grid container spacing={1}>
-                {[1, 2, 3, 4, 5].map((v, i) => (
-                    <Grid item xs={6} sm={4} key={i}>
-                        <Vignette vignette={vignettes[0]} />
+                {vignettes.map(v => (
+                    <Grid item xs={6} sm={4} key={v.vignetteID}>
+                        <Vignette vignette={v} />
                     </Grid>
                 ))}
             </Grid>

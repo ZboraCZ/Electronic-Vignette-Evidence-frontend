@@ -29,3 +29,17 @@ export const patchUser = createAsyncThunk(
         }
 })
 
+export const fetchUserVignettes = createAsyncThunk(
+    'users/fetchUserVignettes',
+    async (id, { rejectWithValue }) => {
+
+        try {
+            
+            const response = await axios.get(`users/${id}/vignettes`)
+            return response.data;
+            
+        } catch (err) {
+            return rejectWithValue(err.response.error || err)
+        }
+})
+
