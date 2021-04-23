@@ -15,9 +15,7 @@ const App = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isAuth = useSelector(getIsAuth);
-
-  console.log('git check');
-
+  
   useEffect(() => {
     isAuth && dispatch(fetchUser(1))
   }, [isAuth, dispatch])
