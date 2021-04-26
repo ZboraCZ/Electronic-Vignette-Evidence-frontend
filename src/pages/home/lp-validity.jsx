@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Paper, Typography, Grid } from '@material-ui/core'
+import { Paper, Typography, Grid, Button } from '@material-ui/core'
+import { Link } from 'react-router-dom'
+
+import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import LoadingButton from 'components/shared/loading-button';
-import { makeStyles } from '@material-ui/core/styles';
+
 import { fetchVignetteValidate } from 'api/vignettes'
 import Vignette from 'components/vignette';
 import LicensePlateValidator from 'components/shared/license-plate-validator';
@@ -15,7 +18,8 @@ const LPValidity = () => {
 
   const [validVignette, setValidVignette] = useState(null)
   const [vignetteFree, setVignetteFree] = useState(null)
-  
+  const [isValid, setIsValid] = useState(false);
+
   useEffect(() => {
     //console.log()
   }, [validVignette])
@@ -28,13 +32,12 @@ const LPValidity = () => {
         .then(res => {
           setVignetteFree(true)
           setLoading(false);
-          /*
+          
           setValidVignette(prevState => ({
             ...prevState,
             valid: true,
             vignette: res.data[0]
           }))
-          */
         })
         .catch(err => {
           setVignetteFree(false)
@@ -50,6 +53,8 @@ const LPValidity = () => {
 
   const validFormat = (lp) => {
     setLP(lp)
+
+    !!lp ? setIsValid(true) : setIsValid(false)
   }
 
 
@@ -64,7 +69,7 @@ const LPValidity = () => {
       </Typography>
 
       <LicensePlateValidator 
-        onChange={lp => console.log(lp)}
+        onChange={lp => {}}
         validFormat={validFormat} 
         pending={loading} 
         state={vignetteFree} 
@@ -77,7 +82,7 @@ const LPValidity = () => {
           color="primary" 
           className={classes.btn}
           onClick={handleButtonClick}
-          disabled={loading}
+          disabled={(loading || !isValid)}
           loading={loading}
         >
           Ověřit
@@ -87,9 +92,13 @@ const LPValidity = () => {
       {!!validVignette && (
         <div className={classes.vignetteValidated}>
           {validVignette.valid ? (
-            <Vignette vignette={validVignette.vignette} /> 
+            <Alert>
+              <strong>Vozidlo má pro dnešní den zakoupenou dálniční známku</strong>
+          </Alert>
           ) : (
-            <Alert severity="error"><strong>Známka neplatná</strong></Alert>
+            <Alert severity="error">
+              <strong>Vozidlo nemá pro dnešní den zakoupenou dálniční známku</strong>
+            </Alert>
           )}
         </div>
       )}

@@ -15,7 +15,7 @@ const App = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isAuth = useSelector(getIsAuth);
-
+  
   useEffect(() => {
     isAuth && dispatch(fetchUser(1))
   }, [isAuth, dispatch])
