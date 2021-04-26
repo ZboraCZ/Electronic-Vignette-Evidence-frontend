@@ -31,7 +31,7 @@ const Overview = () => {
         <div>
             <Grid container spacing={1}>
                 {[1, 2, 3, 4, 5].map((v, i) => (
-                    <Grid item xs={6} sm={4} key={i}>
+                    <Grid item xs={6} sm={6} key={i}>
                         <Vignette vignette={vignettes[0]} />
                     </Grid>
                 ))}
