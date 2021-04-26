@@ -18,6 +18,7 @@ export const slice = createSlice({
         [fetchUser.fulfilled]: (state, action) => {
             state.pending = false
             state.user = action.payload
+
         },
         [fetchUser.rejected]: (state, action) => {
             state.pending = false
@@ -35,6 +36,7 @@ export const slice = createSlice({
                 ...state.user,
                 ...action.payload
             }
+
         },
         [patchUser.rejected]: (state, action) => {
             state.pending = false

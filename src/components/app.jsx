@@ -8,16 +8,19 @@ import Footer from 'components/footer'
 import Wrapper from 'components/shared/wrapper'
 
 import { fetchUser } from 'api/user';
-import { getIsAuth } from 'store/auth';
+import { getIsAuth, getUserId, logout } from 'store/auth';
 
 
 const App = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isAuth = useSelector(getIsAuth);
-  
+  const userId = useSelector(getUserId);
+
   useEffect(() => {
-    isAuth && dispatch(fetchUser(1))
+    isAuth && dispatch(fetchUser(userId)).then(res => {
+      res?.error?.message === 'Rejected' && dispatch(logout())
+    })
   }, [isAuth, dispatch])
 
   return (

@@ -1,5 +1,6 @@
 import axios from './config'
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { logout } from 'store/auth';
 
 export const fetchUser = createAsyncThunk(
     'users/fetchUser',
@@ -11,6 +12,7 @@ export const fetchUser = createAsyncThunk(
             return response.data;
             
         } catch (err) {
+            logout()
             return rejectWithValue(err.response.error || err)
         }
 })

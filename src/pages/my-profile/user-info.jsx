@@ -6,7 +6,8 @@ import { Typography, Grid, TextField, MenuItem, Menu, IconButton, Button, Paper 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { fetchUser } from 'api/user';
-import { getUser } from 'store/user';
+import { getUser} from 'store/user';
+import { getUserId  } from 'store/auth';
 import { patchUser } from 'api/user'
 import LoadingButton from 'components/shared/loading-button'
 import Loader from 'components/shared/loader';
@@ -17,6 +18,7 @@ const UserInfo = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const userState = useSelector(getUser);
+    const userId = useSelector(getUserId)
     
     const [isEditing, setIsEditing] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -35,7 +37,7 @@ const UserInfo = () => {
     }
 
     useEffect(() => {
-        dispatch(fetchUser(1))
+        dispatch(fetchUser(userId))
     }, [dispatch]);
     
     const handleEditing = () => {
