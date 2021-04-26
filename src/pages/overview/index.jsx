@@ -47,7 +47,7 @@ const Overview = () => {
         <div>
             <Grid container spacing={1}>
                 {vignettes.map(v => (
-                    <Grid item xs={6} sm={4} key={v.vignetteID}>
+                    <Grid item xs={6} sm={6} key={v.vignetteID}>
                         <Vignette vignette={v} />
                     </Grid>
                 ))}
