@@ -26,8 +26,9 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography } from '@material-ui/core';
-import { fetchUserVignettes } from 'api/vignettes'
-import Vignette from 'components/vignette'
+import { fetchUserVignettes } from 'api/vignettes';
+import Vignette from 'components/vignette';
+import { VignettesTable} from 'components/vignette/vignettesTable'
 
 const ManageUsers = () => {
   
@@ -133,7 +134,7 @@ const ManageUsers = () => {
             }
             {console.log(vignettes)}
             
-            {<Grid container spacing={1}>
+            {/*<Grid container spacing={1}>
                 {[1, 2, 3, 4, 5].map((v, i) => (
                     <Grid item xs={6} sm={4} key={i}>
                         <Vignette vignette={(vignettes != null) ? vignettes[0] : tempVignettes[0]} />
@@ -141,6 +142,7 @@ const ManageUsers = () => {
                 ))}
             </Grid>}
             {/*<Modal />*/}
+            <VignettesTable vignettesArr={(vignettes != null) ? vignettes : tempVignettes} />
         </div>
         </>
       )}
