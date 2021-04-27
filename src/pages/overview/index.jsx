@@ -22,7 +22,7 @@ const Overview = () => {
   const { vignettes, pending, error } = vignettesState;
 
     //mocked vignette
-    /*const vignettes = [{
+    const vignettesMocked = [{
         vignetteId: 0,
         licensePlate: '4A2 3000',
         serialNumber: 'XXX',
@@ -35,7 +35,7 @@ const Overview = () => {
         },
         usedId: 0,
         validFrom: '2021-03-27'
-    }]*/
+    }]
     
     if (pending)
         return <Loader />
@@ -46,8 +46,8 @@ const Overview = () => {
     return (
         <div>
             <Grid container spacing={1}>
-                {vignettes.map(v => (
-                    <Grid item xs={6} sm={6} key={v.vignetteID}>
+                {vignettesMocked.map((v, i) => (
+                    <Grid item xs={6} sm={6} key={i}>
                         <Vignette vignette={v} />
                     </Grid>
                 ))}

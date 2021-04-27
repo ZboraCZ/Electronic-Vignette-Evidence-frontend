@@ -42,9 +42,9 @@ const Vignette = ({ vignette }) => {
                     
                     <Menu
                         anchorEl={anchorEl}
-                        keepMounted
                         open={open}
                         onClose={handleClose}
+                        onClick={handleClose}
                     >
                         <MenuItem onClick={handleExpandClick}>{'ZOBRAZIT '}{!expanded ?  `VÍCE` : 'MÉNĚ'}</MenuItem>
                         <MenuItem>PRODLOUŽIT PLATNOST</MenuItem>
