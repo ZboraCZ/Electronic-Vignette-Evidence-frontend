@@ -26,12 +26,48 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography } from '@material-ui/core';
+import { fetchUserVignettes } from 'api/vignettes'
+import Vignette from 'components/vignette'
 
 const ManageUsers = () => {
   
   const classes = useStyles();
 
   const [user, setUser] = useState(null)
+
+  const [vignettes, setVignettes] = useState(null)
+
+  const tempVignettes = [{
+      vignetteId: 0,
+      licensePlate: '4A2 3000',
+      serialNumber: 'XXX',
+      vignetteType: {
+          id: 1,
+          name: '10denni',
+          display_name: '10ti denní',
+          price: 310,
+          duration: '10 00:00:00'
+      },
+      usedId: 0,
+      validFrom: '2021-03-27'
+    }]
+
+  const [isLoading, setLoading] = useState(null)
+
+  const getUserVignettes = (userId) => {
+    setLoading(true)
+      setTimeout(() => {
+        fetchUserVignettes(userId)
+          .then(res => {
+            setVignettes(res.data)
+            setLoading(false);
+          })
+          .catch(err => {
+            console.log(err)
+            setLoading(false)
+          });
+      }, 1500);
+  }
 
   return (
     <Paper className={classes.root}>
@@ -52,7 +88,7 @@ const ManageUsers = () => {
         </Grid>
       </Grid>
 
-      {user && (
+      {user && (        
         <>
           <Typography>
             {user.first_name} {user.last_name}
@@ -73,6 +109,39 @@ const ManageUsers = () => {
           <Typography>
             Zakoupené známky:
           </Typography>
+
+          <div>
+            {/*getUserVignettes(user.id)*/}
+            {/*
+              setVignettes(
+                [{
+                vignetteId: 0,
+                licensePlate: '4A2 3000',
+                serialNumber: 'XXX',
+                vignetteType: {
+                    id: 1,
+                    name: '10denni',
+                    display_name: '10ti denní',
+                    price: 310,
+                    duration: '10 00:00:00'
+                },
+                usedId: 0,
+                validFrom: '2021-03-27'
+                }]
+              )
+              */
+            }
+            {console.log(vignettes)}
+            
+            {<Grid container spacing={1}>
+                {[1, 2, 3, 4, 5].map((v, i) => (
+                    <Grid item xs={6} sm={4} key={i}>
+                        <Vignette vignette={(vignettes != null) ? vignettes[0] : tempVignettes[0]} />
+                    </Grid>
+                ))}
+            </Grid>}
+            {/*<Modal />*/}
+        </div>
         </>
       )}
      

@@ -31,3 +31,5 @@ export const postVignetteExtend = createAsyncThunk(
         
 })
 
+export const fetchUserVignettes = (userId) => axios.get(`users/${userId}/vignettes`)
+
