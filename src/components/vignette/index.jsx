@@ -4,7 +4,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 
-const Vignette = ({ vignette }) => {
+const Vignette = ({ vignette, handleMenuAction }) => {
     
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
@@ -23,6 +23,8 @@ const Vignette = ({ vignette }) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleAction = (action) => handleMenuAction(action, vignette.id)
     
     return (
         <Card className={classes.root}>
@@ -47,9 +49,9 @@ const Vignette = ({ vignette }) => {
                         onClick={handleClose}
                     >
                         <MenuItem onClick={handleExpandClick}>{'ZOBRAZIT '}{!expanded ?  `VÍCE` : 'MÉNĚ'}</MenuItem>
-                        <MenuItem>PRODLOUŽIT PLATNOST</MenuItem>
-                        <MenuItem>ODLOŽIT PLATNOST</MenuItem>
-                        <MenuItem>ODSTRANIT</MenuItem>
+                        <MenuItem onClick={() => handleAction('extend')}>PRODLOUŽIT PLATNOST</MenuItem>
+                        <MenuItem onClick={() => handleAction('delay')}>ODLOŽIT PLATNOST</MenuItem>
+                        <MenuItem onClick={() => handleAction('remove')}>ODSTRANIT</MenuItem>
                     </Menu>
                 </Grid>
                 <Grid container>
@@ -123,9 +125,6 @@ const Vignette = ({ vignette }) => {
                     </CardActions>
                 </Collapse>
             </CardContent>
-
-
-            
       </Card>
     )
 }

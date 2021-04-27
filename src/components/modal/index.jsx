@@ -5,116 +5,129 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import Typography from '@material-ui/core/Typography'
-import { fetchVignetteTypes } from 'api/vignette-types';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import { vignetteTypes } from 'store/vignettes';
-import Loader from 'components/shared/loader';
+import ModalExtend from './modal-extend'
+import ModalDelay from './modal-delay'
+import ModalRemove from './modal-remove'
+import { 
+  postVignetteExtend,
+  postVignetteDelay,
+  deleteVignette
+} from 'api/vignettes';
 
-//import { postVignetteExtend } from 'api/vignettes';
-
-const Modal = () => {
+const Modal = ({ state }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const typesState = useSelector(vignetteTypes);
 
   const [open, setOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState({});
-    
-  const lp = '4A2 3000'
+  const [extended, setExtended] = useState(null);
+  const [removed, setRemoved] = useState(null);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchVignetteTypes())
-  }, [])
-
-  const handleClickOpen = () => {
-    //setSelectedType({})
-    setOpen(true);
-  }
+    !!state && setOpen(true);
+  }, [state])
 
   const handleClose = () => setOpen(false);
 
-  const handleSelectedType = ({ target }) => {
-    setSelectedType(
-        typesState.types.find(type => type.id === Number(target.value))
-    )
-  }
-
   const handleExtend = () => {
-    console.log(selectedType)
-    //dispatch(postVignetteExtend({ vignetteId: selectedType.id, days: type.duration }))
-    //handleClose()
+    dispatch(postVignetteExtend({ 
+      id: extended.id,
+      vignette_type_id: extended.duration,
+      days: extended.duration.split(' ')[0]
+    }))
+    
+    
+    handleClose()
   }
 
-  const { types, pending } = typesState;
+  const handleDelay = () => {
+    //dispatch(postVignetteDelay())
+  }
 
-  if (pending)
-    return <Loader />
+  const handleRemove = () => {
+    dispatch(deleteVignette(state.vignette.id)).then(res => {
+      setMessage('Uspesne znamka odstranena')
+    })
+  }
+
+  const handleCloseMessage = () => {
+    setMessage(null);
+  }
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
       >
-        <DialogTitle>Prodloužit platnost známky</DialogTitle>
-        <DialogContent>
-            <DialogContentText>
-                Zvolená SPZ: <strong>{lp}</strong>
-            </DialogContentText>
-            <FormControl variant='outlined' className={classes.formControl}>
-                <InputLabel>Varianta</InputLabel>
-                <Select
-                    value={selectedType.id || ''}
-                    onChange={handleSelectedType}
-                    label="Varianta"
-                    defaultValue={''}
-                >
-                    {types.map(type => (
-                        <MenuItem key={type.id} value={type.id}>
-                            {type.display_name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>    
+        {state?.action === 'extend' && (
+          <ModalExtend 
+            vignette={state.vignette} 
+            handleExtended={extended => setExtended(extended)}
+          />
+        )}
 
-            {!!Object.keys(selectedType).length && (
-                <div>
-                    <Typography variant='button'>
-                        Cena: <span className={classes.price}>{selectedType.price} Kč</span>
-                    </Typography>
-                </div>
-            )} 
-        </DialogContent>
+        {state?.action === 'delay' && (
+          <ModalDelay vignette={state.vignette} />
+        )}
+
+        {state?.action === 'remove' && (
+          <ModalRemove 
+            vignette={state.vignette} 
+          />
+        )}
+
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Zrušit
           </Button>
-          <Button onClick={handleExtend} color="primary" autoFocus>
-            Prodloužit
-          </Button>
+
+          {state?.action === 'extend' && (
+            <Button onClick={handleExtend} color="primary" autoFocus>
+              Prodloužit platnost
+            </Button>
+          )}
+
+          {state?.action === 'delay' && (
+            <Button onClick={handleDelay} color="primary" autoFocus>
+              Odložit platnost         
+            </Button>
+          )}
+
+          {state?.action === 'remove' && (
+            <Button onClick={handleRemove} color="primary" autoFocus>
+              Potvrdit odstranění            
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
+
+      <Snackbar open={!!message} autoHideDuration={6000} onClose={handleCloseMessage}>
+        <MuiAlert 
+          elevation={6} 
+          variant="filled" 
+          onClose={handleCloseMessage} severity="success"
+        >
+          {message}
+        </MuiAlert>
+      </Snackbar>
+
     </div>
   );
 }
 export default Modal 
 
 const useStyles = makeStyles((theme) => ({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: '300px',
-    },
-    price: {
-        color: theme.custom.price
-    },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '300px',
+  },
+  price: {
+    color: theme.custom.price
+  }
 }))
