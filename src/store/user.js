@@ -63,7 +63,7 @@ export const slice = createSlice({
 // Selectors
 export const getUser = state => state.user;
 export const getVignettes = state => state.vignettes;
-export const getIsAdmin = () => true
-  
+export const getIsAdmin = state => state.user.user.role.name === 'admin';
+
 export default slice.reducer;
   
