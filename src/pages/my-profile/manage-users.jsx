@@ -142,7 +142,7 @@ const ManageUsers = () => {
                 ))}
             </Grid>}
             {/*<Modal />*/}
-            <VignettesTable vignettesArr={(vignettes != null) ? vignettes : tempVignettes} />
+            <VignettesTable user={user} vignettesArr={(vignettes != null) ? vignettes : tempVignettes} />
         </div>
         </>
       )}
