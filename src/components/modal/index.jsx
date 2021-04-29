@@ -51,7 +51,7 @@ const Modal = ({ state }) => {
 
   const handleRemove = () => {
     dispatch(deleteVignette(state.vignette.id)).then(res => {
-      setMessage('Uspesne znamka odstranena')
+      setMessage('Známka smazána')
     })
   }
 

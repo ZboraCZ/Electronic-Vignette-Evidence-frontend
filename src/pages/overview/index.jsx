@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Grid } from '@material-ui/core';
-import { fetchUserVignettes } from 'api/user';
+import { Grid, Typography } from '@material-ui/core';
+import { fetchLicencePlates } from 'api/vignettes';
 import { getVignettes } from 'store/user';
 
 import Vignette from 'components/vignette';
@@ -15,21 +15,28 @@ const Overview = () => {
   const dispatch = useDispatch()
   const vignettesState = useSelector(getVignettes)
   const userId = useSelector(getUserId)
-
+  
+  const [emptyVignettes, setEmptyVignettes] = useState(false);
   const [modalState, setModalState] = useState(null)
   
   useEffect(() => {
-    dispatch(fetchUserVignettes(userId))
+    dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
+        !!payload?.response?.data?.detail && setEmptyVignettes(true);
+    })
   }, [dispatch])
 
   const openModal = (action, vignetteId) => {
     setModalState({
         action, 
-        vignette: vignettesMocked.find(vignette => vignette.id === vignetteId)
+        vignette: vignettes.find(vignette => vignette.id === vignetteId)
     })
   }
-  //const { vignettes, pending, error } = vignettesState;
-  const pending = false;
+
+  const { vignettes, pending, error } = vignettesState;
+
+  console.log(vignettes);
+
+  /*const pending = false;
   const error = false;
     //mocked vignette
     const vignettesMocked = [{
@@ -46,19 +53,24 @@ const Overview = () => {
         userId: 0,
         validFrom: '2021-03-27'
     }]
-    
+    */
+
     if (pending)
         return <Loader />
 
+    /*
     else if (error)
         return <Alert error={error} />
+    */
+    else if (emptyVignettes)
+        return <Typography variant='h5' align='center'>Nemáte zakoupené žádné známky</Typography> 
 
     return (
         <div>
             <Grid container spacing={1}>
-                {vignettesMocked.map((v, i) => (
+                {vignettes.map((v, i) => (
                     <Grid item xs={6} sm={6} key={i}>
-                        <Vignette handleMenuAction={openModal} vignette={v} />
+                        <Vignette handleMenuAction={openModal} licensePlate={v.license_plate} />
                     </Grid>
                 ))}
             </Grid>

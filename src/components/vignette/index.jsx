@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux'
 import { Card, Grid, Typography, CardContent, CardActions, Collapse, Button, Chip, IconButton, Menu, MenuItem,  } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import { fetchVignetteByLicencePlate } from 'api/vignettes'
+import Loader from 'components/shared/loader';
 
-const Vignette = ({ vignette, handleMenuAction }) => {
+const Vignette = ({ licensePlate, handleMenuAction }) => {
     
     const classes = useStyles();
-    const [expanded, setExpanded] = useState(false);
-
+    const dispatch = useDispatch();
     const handleExpandClick = () => setExpanded(!expanded);
+
+    const [vignette, setVignette] = useState(null);
+    const [expanded, setExpanded] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const open = Boolean(anchorEl);
 
-    const isActive = Boolean(Math.random() < 0.5);
+    useEffect(() => {
+    
+        fetchVignetteByLicencePlate(licensePlate).then(res => {
+            setVignette(res.data[0])
+            console.log(res.data[0])
+        })
+    }, []);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -24,8 +35,8 @@ const Vignette = ({ vignette, handleMenuAction }) => {
         setAnchorEl(null);
     };
 
-    const handleAction = (action) => handleMenuAction(action, vignette.id)
-    
+    const handleAction = (action) => handleMenuAction(action, /*vignette.id*/)
+
     return (
         <Card className={classes.root}>
             <CardContent>
@@ -35,13 +46,14 @@ const Vignette = ({ vignette, handleMenuAction }) => {
                     justify="space-between"
                     alignItems="center"
                 >
+                  
                     <Typography variant="h4">
-                        {vignette.licensePlate}
+                        {licensePlate}
                     </Typography>
                     <IconButton aria-label='settings' edge='end' onClick={handleClick}>  
                         <MoreVertIcon />
                     </IconButton>
-                    
+
                     <Menu
                         anchorEl={anchorEl}
                         open={open}
@@ -54,76 +66,88 @@ const Vignette = ({ vignette, handleMenuAction }) => {
                         <MenuItem onClick={() => handleAction('remove')}>ODSTRANIT</MenuItem>
                     </Menu>
                 </Grid>
-                <Grid container>
-                    <Grid item xs={6}>
-                        <Typography variant="subtitle1">
-                            VARIANTA
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6} align="right"> 
-                        <Typography variant="body1" className={classes.rightPadding}>
-                            {vignette.vignetteType.display_name}     
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography variant="subtitle1">
-                            ZBÝVÁ
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6} align="right"> 
-                        <Typography variant="body1" className={classes.rightPadding}>
-                            6 dní
-                        </Typography>
-                    </Grid>
-                </Grid>
+                                    
+                {!!vignette ? (
+                        <Loader />
+                    ) : (
+                        <>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        VARIANTA
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        {/*vignette.vignetteType.display_name*/}     
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        ZBÝVÁ
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        6 dní
+                                    </Typography>
+                                </Grid>
+                            </Grid>
 
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <Typography variant="subtitle1">
-                                DATUM ZAKOUPENÍ
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6} align="right"> 
-                            <Typography variant="body1" className={classes.rightPadding}>
-                                {vignette.validFrom}     
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="subtitle1">
-                                CENA
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6} align="right"> 
-                            <Typography variant="body1" className={classes.rightPadding}>
-                                {vignette.vignetteType.price} 
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant="subtitle1">
-                                SLEVA
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6} align="right"> 
-                            <Typography variant="body1" className={classes.rightPadding}>
-                                50%
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                    <CardActions>
-                        <Button
-                            className={clsx(classes.expand, {
-                                [classes.expandOpen]: expanded,
-                            })}
-                            onClick={handleExpandClick}
-                            aria-expanded={expanded}
-                            aria-label="show more"
-                            color='primary'
-                        >
-                            {'ZOBRAZIT '}{!expanded ?  `VÍCE` : 'MÉNĚ'}
-                        </Button>
-                    </CardActions>
-                </Collapse>
+                            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        DATUM ZAKOUPENÍ
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        {/*vignette.validFrom*/}     
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        CENA
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        {/*vignette.vignetteType.price*/} 
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        SLEVA
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        50%
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+
+                            <CardActions>
+                                <Button
+                                    className={clsx(classes.expand, {
+                                        [classes.expandOpen]: expanded,
+                                    })}
+                                    onClick={handleExpandClick}
+                                    aria-expanded={expanded}
+                                    aria-label="show more"
+                                    color='primary'
+                                >
+                                    {'ZOBRAZIT '}{!expanded ?  `VÍCE` : 'MÉNĚ'}
+                                </Button>
+                            </CardActions>
+                            </Collapse>
+                        </>
+                    )}
+                
+
+
+                
             </CardContent>
       </Card>
     )

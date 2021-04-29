@@ -59,7 +59,24 @@ export const deleteVignette = createAsyncThunk(
         } catch (err) {
             return rejectWithValue(err.response.error)
         }
-
-        
 })
+
+export const fetchLicencePlates = createAsyncThunk(
+    'users/fetchUserLicencePlates',
+    async (id, { rejectWithValue }) => {
+
+        try {
+            
+            const response = await axios.get(`users/${id}/licence_plates`)
+            return response.data;
+            
+        } catch (err) {
+            return rejectWithValue(err.response.error || err)
+        }
+})
+
+export const fetchVignetteByLicencePlate = (lp) => {
+    return axios.get(`vignettes/${lp}`)
+}
+
 
