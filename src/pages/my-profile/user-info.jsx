@@ -11,6 +11,7 @@ import { getUserId  } from 'store/auth';
 import { patchUser } from 'api/user'
 import LoadingButton from 'components/shared/loading-button'
 import Loader from 'components/shared/loader';
+import { fetchVignetteTypes } from 'api/vignette-types';
 
 
 const UserInfo = () => {

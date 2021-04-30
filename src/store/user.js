@@ -16,7 +16,8 @@ export const slice = createSlice({
         },
         [fetchUser.fulfilled]: (state, action) => {
             state.pending = false
-            state.user = action.payload
+            delete action.payload.password;
+            state.user = action.payload;
 
         },
         [fetchUser.rejected]: (state, action) => {

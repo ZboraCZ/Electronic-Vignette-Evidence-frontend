@@ -25,7 +25,7 @@ import {
   } from '@material-ui/pickers';
 
 
-const ModalDelay = ({ vignette }) => {
+const ModalDelay = ({ vignette, handleDelayed }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -33,6 +33,8 @@ const ModalDelay = ({ vignette }) => {
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
+        handleDelayed(date);
+
     };
 
     //const typesState = useSelector(vignetteTypes);
@@ -52,15 +54,13 @@ const ModalDelay = ({ vignette }) => {
       )
     }
     */
-
-    console.log(vignette)
   
     return (
       <>
         <DialogTitle>Odložit platnost známky</DialogTitle>
         <DialogContent>
             <DialogContentText>
-                Zvolená SPZ: <strong>{vignette?.licensePlate}</strong>
+                Zvolená SPZ: <strong>{vignette?.license_plate}</strong>
             </DialogContentText>
             <MuiPickersUtilsProvider utils={DateFnsUtils} locale={csLocale}>
                 <KeyboardDatePicker

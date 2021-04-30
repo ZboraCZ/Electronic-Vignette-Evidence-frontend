@@ -25,6 +25,7 @@ const Modal = ({ state }) => {
 
   const [open, setOpen] = useState(false);
   const [extended, setExtended] = useState(null);
+  const [delayed, setDelayed] = useState(null);
   const [removed, setRemoved] = useState(null);
   const [message, setMessage] = useState(null);
 
@@ -35,24 +36,36 @@ const Modal = ({ state }) => {
   const handleClose = () => setOpen(false);
 
   const handleExtend = () => {
+    console.log('state extend', state, extended)
+    /*
     dispatch(postVignetteExtend({ 
       id: extended.id,
       vignette_type_id: extended.duration,
       days: extended.duration.split(' ')[0]
-    }))
+    })).then(res => {
+      setMessage('Známka prodloužena')
+    })
+    */
     
     
     handleClose()
   }
 
   const handleDelay = () => {
-    //dispatch(postVignetteDelay())
+    console.log(delayed)
+    /*dispatch(postVignetteDelay()).then(res => {
+      setMessage('Známka odložena')
+    })
+    */
   }
 
   const handleRemove = () => {
+    /*
     dispatch(deleteVignette(state.vignette.id)).then(res => {
       setMessage('Známka smazána')
     })
+    */
+   //console.log(state.vignette.id)
   }
 
   const handleCloseMessage = () => {
@@ -73,7 +86,10 @@ const Modal = ({ state }) => {
         )}
 
         {state?.action === 'delay' && (
-          <ModalDelay vignette={state.vignette} />
+          <ModalDelay 
+            vignette={state.vignette} 
+            handleDelayed={delayed => setDelayed(delayed)}
+          />
         )}
 
         {state?.action === 'remove' && (

@@ -23,16 +23,20 @@ const ModalExtend = ({ vignette, handleExtended }) => {
     const { types, pending } = typesState;
   
     const [selectedType, setSelectedType] = useState({});
-  
-    useEffect(() => {
-      dispatch(fetchVignetteTypes())
-    }, [])
 
     useEffect(() => {
+      //dispatch(fetchVignetteTypes())
+    }, [])
+
+    //console.log(vignette)
+
+    useEffect(() => {
+      //console.log(vignette, selectedType);
       handleExtended({
         id: vignette.id, 
         duration: selectedType.duration
       })
+      
     }, [selectedType])
   
     const handleSelectedType = ({ target }) => {
@@ -49,7 +53,7 @@ const ModalExtend = ({ vignette, handleExtended }) => {
         <DialogTitle>Prodloužit platnost známky</DialogTitle>
         <DialogContent>
           <DialogContentText>
-              Zvolená SPZ: <strong>{vignette?.licensePlate}</strong>
+              Zvolená SPZ: <strong>{vignette?.license_plate}</strong>
           </DialogContentText>
           <FormControl variant='outlined' className={classes.formControl}>
               <InputLabel>Varianta</InputLabel>

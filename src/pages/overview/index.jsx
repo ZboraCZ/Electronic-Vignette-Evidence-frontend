@@ -10,6 +10,7 @@ import Alert from 'components/shared/alert';
 import Loader from 'components/shared/loader';
 import Modal from 'components/modal';
 import { getUserId } from 'store/auth';
+import { fetchVignetteTypes } from 'api/vignette-types'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -23,37 +24,20 @@ const Overview = () => {
     dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
         !!payload?.response?.data?.detail && setEmptyVignettes(true);
     })
+
+    dispatch(fetchVignetteTypes())
+
   }, [dispatch])
 
-  const openModal = (action, vignetteId) => {
+  const openModal = (action, vignette) => {
+    
     setModalState({
         action, 
-        vignette: vignettes.find(vignette => vignette.id === vignetteId)
+        vignette
     })
   }
 
-  const { vignettes, pending, error } = vignettesState;
-
-  console.log(vignettes);
-
-  /*const pending = false;
-  const error = false;
-    //mocked vignette
-    const vignettesMocked = [{
-        id: 1,
-        licensePlate: '4A2 3000',
-        serialNumber: 'XXX',
-        vignetteType: {
-            id: 1,
-            name: '10denni',
-            display_name: '10ti denní',
-            price: 310,
-            duration: '10 00:00:00'
-        },
-        userId: 0,
-        validFrom: '2021-03-27'
-    }]
-    */
+  const { vignettes, types, pending, error } = vignettesState;
 
     if (pending)
         return <Loader />
@@ -70,7 +54,7 @@ const Overview = () => {
             <Grid container spacing={1}>
                 {vignettes.map((v, i) => (
                     <Grid item xs={6} sm={6} key={i}>
-                        <Vignette handleMenuAction={openModal} licensePlate={v.license_plate} />
+                        <Vignette handleMenuAction={openModal} licensePlate={v.license_plate} types={types} />
                     </Grid>
                 ))}
             </Grid>

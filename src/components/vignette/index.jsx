@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { fetchVignetteByLicencePlate } from 'api/vignettes'
 import Loader from 'components/shared/loader';
 
-const Vignette = ({ licensePlate, handleMenuAction }) => {
+const Vignette = ({ licensePlate, handleMenuAction, types }) => {
     
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -16,16 +16,37 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
     const [vignette, setVignette] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [presVignette, setPresVignette] = useState(null);
 
     const open = Boolean(anchorEl);
 
     useEffect(() => {
     
         fetchVignetteByLicencePlate(licensePlate).then(res => {
-            setVignette(res.data[0])
-            console.log(res.data[0])
+
+            setVignette(prevState => ({ 
+                ...prevState, 
+                ...res.data[0]
+            }));
         })
     }, []);
+
+
+    useEffect(() => {
+        if (!!Object.keys(types).length && !!vignette) {
+
+            const vignetteType = types.find(type => type.id == vignette.vignette_type_id);
+
+            const updatedVignette = {
+                ...vignette,
+                vignetteType
+            }
+            setPresVignette(updatedVignette)
+        }
+       
+    }, [types, vignette])
+
+
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -35,7 +56,25 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
         setAnchorEl(null);
     };
 
-    const handleAction = (action) => handleMenuAction(action, /*vignette.id*/)
+    const handleAction = (action) => handleMenuAction(action, presVignette)
+
+
+    const getDaysDiff = (valid, duration) => {
+        const validFrom = new Date(valid)
+        const today = new Date();
+        const diff = today.getTime() - validFrom.getTime();
+        const diffDays = duration.split(' ')[0] - Math.floor(diff / (1000 * 3600 * 24));
+
+        if (diffDays === 1) 
+            return `${diffDays} den`;
+        
+        return `${diffDays} dní`;
+    }
+
+    const dateFormat = (date) => {
+        const d = new Date(date);
+        return `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
+    }   
 
     return (
         <Card className={classes.root}>
@@ -67,7 +106,7 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
                     </Menu>
                 </Grid>
                                     
-                {!!vignette ? (
+                {!presVignette ? (
                         <Loader />
                     ) : (
                         <>
@@ -79,7 +118,7 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
                                 </Grid>
                                 <Grid item xs={6} align="right"> 
                                     <Typography variant="body1" className={classes.rightPadding}>
-                                        {/*vignette.vignetteType.display_name*/}     
+                                        {presVignette.vignetteType?.display_name}     
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -89,7 +128,7 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
                                 </Grid>
                                 <Grid item xs={6} align="right"> 
                                     <Typography variant="body1" className={classes.rightPadding}>
-                                        6 dní
+                                        {getDaysDiff(presVignette.valid_from, presVignette.vignetteType.duration)}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -103,7 +142,7 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
                                 </Grid>
                                 <Grid item xs={6} align="right"> 
                                     <Typography variant="body1" className={classes.rightPadding}>
-                                        {/*vignette.validFrom*/}     
+                                        {dateFormat(presVignette.created)}     
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -113,17 +152,7 @@ const Vignette = ({ licensePlate, handleMenuAction }) => {
                                 </Grid>
                                 <Grid item xs={6} align="right"> 
                                     <Typography variant="body1" className={classes.rightPadding}>
-                                        {/*vignette.vignetteType.price*/} 
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography variant="subtitle1">
-                                        SLEVA
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} align="right"> 
-                                    <Typography variant="body1" className={classes.rightPadding}>
-                                        50%
+                                        {presVignette.vignetteType.price} Kč
                                     </Typography>
                                 </Grid>
                             </Grid>
