@@ -15,6 +15,7 @@ import Loader from 'components/shared/loader';
 import { onEnterEvent } from 'utils/event'
 import { postRegistration } from 'api/auth'
 import { getAuthError, isNewlyRegistered, login } from 'store/auth'
+import { validateEmail, validateNoNumbers, validateOnlyNumbers } from 'utils/validation';
 
 const Registration = () => {
   const classes = useStyles();
@@ -33,10 +34,22 @@ const Registration = () => {
   })
 
   const [errors, setErrors] = useState({})
+  const [formValid, setFormValid] = useState(false);
+  const [validationErrors, setValidationErrors] = useState(
+    creds
+  );
 
   useEffect(() => {
     setErrors(authError)
   }, [authError])
+
+  useEffect(() => {
+       
+    const isFormFilled = Object.values(creds).every(cred => cred.length > 0);
+    
+    setFormValid(isFormFilled);
+  
+  }, [creds])
 
   const formLabels = {
     email: 'Email',
@@ -49,34 +62,54 @@ const Registration = () => {
 
   const formTypes = {
     password: 'password',
-    passwordConfirm: 'password'
+    passwordConfirm: 'password',
+    email: 'email'
   }
+
 
   useState(() => {
     onEnterEvent(() => register())
   }, [])
 
-  const handleCreds = ({ target }) => 
+  const handleCreds = ({ target }) => {
     setCreds(prevState => ({
       ...prevState,
       [target.name]: target.value
-  }))
+    }))
+  }
 
   const helperErrorText = (name) => {
-    if (!!Object.keys(errors).length && name in errors)
-      return errors[name].reduce((acc, cur) => acc += cur);
+    return errors[name];
+
+    
   }
 
   const register = () => {
     const { password, passwordConfirm } = creds;
-    if (password !== passwordConfirm) {
-      setErrors(errors => ({
-        ...errors,
-        password: ['Hesla se neshodují'],
-        passwordConfirm: ['Hesla se neshodují']
-      }))
-    } else
-      dispatch(postRegistration(creds))
+
+    password !== passwordConfirm && setErrors(errors => ({
+      ...errors,
+      password: ['Hesla se neshodují'],
+      passwordConfirm: ['Hesla se neshodují']
+    }))
+  
+    setErrors(errors => ({
+      ...errors,
+      first_name: !validateNoNumbers(creds.first_name) ? 'Nesprávný formát jména' : '',
+      last_name: !validateNoNumbers(creds.last_name) ? 'Nesprávný formát příjmení' : '',
+      email: !validateEmail(creds.email) ? 'Nesprávný formát emailu' : '',
+      phone: !validateOnlyNumbers(creds.phone) ? 'Nesprávný formát telefonního čísla' : ''
+    }))
+
+    const isFormValid = 
+      password === passwordConfirm && 
+      validateEmail(creds.email) &&
+      validateNoNumbers(creds.first_name) &&
+      validateNoNumbers(creds.last_name) &&
+      validateOnlyNumbers(creds.phone);
+
+    
+    isFormValid && dispatch(postRegistration(creds));
   }
 
   const toAdministration = () => dispatch(login())
@@ -138,6 +171,7 @@ const Registration = () => {
           variant="contained" 
           className={classes.loadingButton}
           onClick={register}
+          disabled={!formValid}
         >
           Registrovat se
         </LoadingButton>

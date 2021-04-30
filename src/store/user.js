@@ -1,12 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUser, patchUser, fetchUserVignettes } from 'api/user';
-
+import { fetchUser, patchUser } from 'api/user';
 // Reducer
 export const slice = createSlice({
     name: 'user',
     initialState: {
         user: null,
-        vignettes: null,
         error: false,
         pending: false
     },
@@ -18,7 +16,8 @@ export const slice = createSlice({
         },
         [fetchUser.fulfilled]: (state, action) => {
             state.pending = false
-            state.user = action.payload
+            delete action.payload.password;
+            state.user = action.payload;
 
         },
         [fetchUser.rejected]: (state, action) => {
@@ -42,19 +41,6 @@ export const slice = createSlice({
         [patchUser.rejected]: (state, action) => {
             state.pending = false
             state.error = action.payload || action.error
-        },
-
-        // Get User Vignettes
-        [fetchUserVignettes.pending]: (state, action) => {
-            state.pending = true
-        },
-        [fetchUserVignettes.fulfilled]: (state, action) => {
-            state.pending = false
-            state.vignettes = action.payload
-        },
-        [fetchUserVignettes.rejected]: (state, action) => {
-            state.pending = false
-            state.error = action.payload || action.error
         }
         
     }
@@ -63,7 +49,7 @@ export const slice = createSlice({
 // Selectors
 export const getUser = state => state.user;
 export const getVignettes = state => state.vignettes;
-export const getIsAdmin = () => true
-  
+export const getIsAdmin = state => state?.user?.user?.role?.name === 'admin';
+
 export default slice.reducer;
   

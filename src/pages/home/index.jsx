@@ -29,6 +29,8 @@ const Home = () => {
 
   const { types, pending, error } = vignetteState;
  
+  console.log(error);
+  
   return (
     <div>
 
