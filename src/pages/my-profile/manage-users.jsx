@@ -2,20 +2,8 @@ import { useEffect, useState, Fragment } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input'
 import Grid from '@material-ui/core/Grid'
-
-import EditIcon from "@material-ui/icons/EditOutlined";
-import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
-import RevertIcon from "@material-ui/icons/NotInterestedOutlined";
-import IconButton from "@material-ui/core/IconButton";
 
 import { fetchVignetteTypes, patchVignetteType } from 'api/vignette-types';
 import { vignetteTypes } from 'store/vignettes';
@@ -27,52 +15,61 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography } from '@material-ui/core';
 import { fetchUserVignettes } from 'api/vignettes';
-import Vignette from 'components/vignette';
-import { VignettesTable} from 'components/vignette/vignettesTable'
+import { UserVignetteForm } from 'components/vignette/user-vignette-form'
 
 const ManageUsers = () => {
-  
+
   const classes = useStyles();
 
   const [user, setUser] = useState(null)
-
   const [vignettes, setVignettes] = useState(null)
 
+  useEffect(() => {
+    if(user !== null) {
+      getUserVignettes(user.id)
+    }
+  }, [user])
+
   const tempVignettes = [{
-      vignetteId: 0,
-      licensePlate: '4A2 3000',
-      serialNumber: 'XXX',
-      vignetteType: {
-          id: 1,
-          name: '10denni',
-          display_name: '10ti denní',
-          price: 310,
-          duration: '10 00:00:00'
-      },
-      usedId: 0,
-      validFrom: '2021-03-27'
-    }]
+    vignetteId: 0,
+    licensePlate: '4A2 3000',
+    serialNumber: 'XXX',
+    vignetteType: {
+      id: 1,
+      name: '10denni',
+      display_name: '10ti denní',
+      price: 310,
+      duration: '10 00:00:00'
+    },
+    usedId: 0,
+    validFrom: '2021-03-27'
+  }]
 
   const [isLoading, setLoading] = useState(null)
 
+  /* GONNA BE USED WHEN BE IMPLEMENTED */
   const getUserVignettes = (userId) => {
     setLoading(true)
-      setTimeout(() => {
-        fetchUserVignettes(userId)
-          .then(res => {
-            setVignettes(res.data)
-            setLoading(false);
-          })
-          .catch(err => {
-            console.log(err)
-            setLoading(false)
-          });
-      }, 1500);
+    setTimeout(() => {
+      fetchUserVignettes(userId)
+        .then(res => {
+          //setVignettes(res.data)
+          setLoading(false);
+          setVignettes(res.data)
+          DisplayUserVignettes(res.data)
+        })
+        .catch(err => {
+          console.log(err)
+          setLoading(false)
+        });
+    }, 1500);
   }
+
+  
 
   return (
     <Paper className={classes.root}>
-      <Grid 
+      <Grid
         container
         justify="flex-start"
         alignItems="center"
@@ -85,16 +82,16 @@ const ManageUsers = () => {
         </Grid>
 
         <Grid item>
-          <FindUserInput selectOption={option => setUser(option)}/>
+          <FindUserInput selectOption={option => setUser(option)} />
         </Grid>
       </Grid>
 
-      {user && (        
+      {user && (
         <>
           <Typography>
             {user.first_name} {user.last_name}
           </Typography>
-      
+
           <Typography>
             {user.email}
           </Typography>
@@ -113,46 +110,35 @@ const ManageUsers = () => {
 
           <div>
             {/*getUserVignettes(user.id)*/}
-            {/*
-              setVignettes(
-                [{
-                vignetteId: 0,
-                licensePlate: '4A2 3000',
-                serialNumber: 'XXX',
-                vignetteType: {
-                    id: 1,
-                    name: '10denni',
-                    display_name: '10ti denní',
-                    price: 310,
-                    duration: '10 00:00:00'
-                },
-                usedId: 0,
-                validFrom: '2021-03-27'
-                }]
-              )
-              */
-            }
-            {console.log(vignettes)}
-            
-            {/*<Grid container spacing={1}>
-                {[1, 2, 3, 4, 5].map((v, i) => (
-                    <Grid item xs={6} sm={4} key={i}>
-                        <Vignette vignette={(vignettes != null) ? vignettes[0] : tempVignettes[0]} />
-                    </Grid>
-                ))}
-            </Grid>}
-            {/*<Modal />*/}
-            <VignettesTable user={user} vignettesArr={(vignettes != null) ? vignettes : tempVignettes} />
-        </div>
+
+            <DisplayUserVignettes user={user} vignettes={tempVignettes} />
+          </div>
         </>
       )}
-     
+
     </Paper>
   )
 }
 
 export default ManageUsers
 
+const DisplayUserVignettes = ({user, vignettes}) => {
+
+  console.log(vignettes)
+
+  if (vignettes != null) {
+    return vignettes.map((v, i) => (
+          <UserVignetteForm key={i} user={user} vignette={v} />
+      ))
+    
+  }
+  return (
+    <div></div>
+  )
+
+
+
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -171,13 +157,13 @@ const FindUserInput = (props) => {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState(null);
-  
-  
+
+
   let selectedUser = null;
 
   useEffect(() => {
     setUsers(mockUsers)
-    
+
     //setOptions()
   }, [])
 
@@ -187,7 +173,7 @@ const FindUserInput = (props) => {
       return
     }
     console.log('executed')
-    
+
   }, [loading])
 
   const handleOptionChange = (option, value) => {
@@ -197,7 +183,7 @@ const FindUserInput = (props) => {
 
       return finKey ? user[finKey] : null;
     })
-    
+
     selectedUser = user
 
     //setSelectedOption()
@@ -207,18 +193,18 @@ const FindUserInput = (props) => {
   const handleChange = (e) => {
     console.log('clear clicked')
     const val = e.target.value;
-    const isUser = users.find(user => 
-      user.email.includes(val) || 
-      user.first_name.includes(val) || 
-      user.last_name.includes(val) || 
+    const isUser = users.find(user =>
+      user.email.includes(val) ||
+      user.first_name.includes(val) ||
+      user.last_name.includes(val) ||
       user.phone.includes(val)
-    ) 
-    
-    
+    )
+
+
     if (isUser) {
       const keys = Object.keys(isUser).filter(key => key != 'role' && key != 'id');
-     
-      const key = keys.find(key => { 
+
+      const key = keys.find(key => {
         return isUser[key].includes(val)
       });
       // key = first_name
