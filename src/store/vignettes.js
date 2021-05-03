@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchVignetteTypes, patchVignetteType } from 'api/vignette-types';
 import { fetchLicencePlates } from 'api/vignettes'
+import { fetchUserHistory } from 'api/user'
 
 // Reducer
 export const slice = createSlice({
@@ -8,6 +9,7 @@ export const slice = createSlice({
     initialState: {
         vignettes: [],
         types: [],
+        history: [],
         error: false,
         pending: false
     },
@@ -50,6 +52,19 @@ export const slice = createSlice({
             state.vignettes = action.payload
         },
         [fetchLicencePlates.rejected]: (state, action) => {
+            state.pending = false
+            state.error = action.payload || action.error
+        },
+
+        // Get User History
+        [fetchUserHistory.pending]: (state, action) => {
+            state.pending = true
+        },
+        [fetchUserHistory.fulfilled]: (state, action) => {
+            state.pending = false
+            state.history = action.payload
+        },
+        [fetchUserHistory.rejected]: (state, action) => {
             state.pending = false
             state.error = action.payload || action.error
         }
