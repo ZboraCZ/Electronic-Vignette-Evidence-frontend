@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Grid } from '@material-ui/core';
 import { fetchUserHistory } from 'api/user';
+import { getUserId } from 'store/auth';
 import { getUser } from 'store/user';
 
 import HistoryVignette from 'components/history-vignette'
@@ -12,9 +13,10 @@ import Loader from 'components/shared/loader'
 const History = () => {
     const dispatch = useDispatch()
     const historyState = useSelector(getUser)
+    const userId = useSelector(getUserId)
   
     useEffect(() => {
-        dispatch(fetchUserHistory())
+        dispatch(fetchUserHistory(userId))
     }, [dispatch])
 
     const { history, pending, error } = historyState;
