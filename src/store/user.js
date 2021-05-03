@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUser, patchUser } from 'api/user';
+import { fetchUser, patchUser, fetchUserHistory } from 'api/user';
 // Reducer
 export const slice = createSlice({
     name: 'user',
     initialState: {
         user: null,
+        history: null,
         error: false,
         pending: false
     },
@@ -39,6 +40,19 @@ export const slice = createSlice({
 
         },
         [patchUser.rejected]: (state, action) => {
+            state.pending = false
+            state.error = action.payload || action.error
+        },
+
+        // Get User History
+        [fetchUserHistory.pending]: (state, action) => {
+            state.pending = true
+        },
+        [fetchUserHistory.fulfilled]: (state, action) => {
+            state.pending = false
+            state.history = action.payload
+        },
+        [fetchUserHistory.rejected]: (state, action) => {
             state.pending = false
             state.error = action.payload || action.error
         }
