@@ -41,7 +41,6 @@ export const fetchUserHistory = createAsyncThunk(
             return response.data;
             
         } catch (err) {
-            logout()
             return rejectWithValue(err.response.error || err)
         }
 })
