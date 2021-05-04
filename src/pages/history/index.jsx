@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Grid } from '@material-ui/core';
 import { fetchUserHistory } from 'api/user';
+import { fetchVignetteTypes } from 'api/vignette-types';
 import { getUserId } from 'store/auth';
 import { getVignettes } from 'store/user';
 
@@ -16,13 +17,15 @@ const History = () => {
     const userId = useSelector(getUserId)
   
     useEffect(() => {
-        dispatch(fetchUserHistory(userId))
+        dispatch(fetchUserHistory(userId));
+        dispatch(fetchVignetteTypes());
     }, [dispatch])
 
     const { history, pending, error } = historyState;
 
     //mocked vignette
-    /*const vignettes = [{
+    // odkomentovat a dole misto history dat testHistory
+    /*var testHistory = [{
         vignetteId: 0,
         licensePlate: '4A2 3000',
         serialNumber: 'XXX',
@@ -34,7 +37,8 @@ const History = () => {
             duration: '10 00:00:00'
         },
         usedId: 0,
-        validFrom: '2021-03-27'
+        valid_from: '2021-03-27T00:00:00',
+        created: '2021-03-27T00:00:00'
     }]*/
     
     if (pending)

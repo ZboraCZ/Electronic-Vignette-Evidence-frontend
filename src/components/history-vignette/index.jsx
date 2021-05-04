@@ -1,11 +1,17 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux'
 import { Card, Grid, Typography, CardContent, CardActions, Collapse, Button, Chip, IconButton, Menu, MenuItem,  } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
+import { getVignettes } from 'store/user';
 import clsx from 'clsx';
 
 const HistoryVignette = ({ vignette }) => {
     
+    const vignettesState = useSelector(getVignettes)
+    const { types } = vignettesState;
+    const vignetteType = types.find(type => type.id == vignette.vignette_type_id);
+
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
 
@@ -51,7 +57,7 @@ const HistoryVignette = ({ vignette }) => {
                     alignItems="center"
                 >
                     <Typography variant="h4">
-                        {vignette.licensePlate}
+                        {vignette.license_plate}
                     </Typography>
                     <IconButton aria-label='settings' edge='end' onClick={handleClick}>  
                         <MoreVertIcon />
@@ -74,7 +80,7 @@ const HistoryVignette = ({ vignette }) => {
                     </Grid>
                     <Grid item xs={6} align="right"> 
                         <Typography variant="body1" className={classes.rightPadding}>
-                            {vignette.vignetteType.display_name}     
+                            {vignetteType.display_name}     
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
@@ -84,7 +90,7 @@ const HistoryVignette = ({ vignette }) => {
                     </Grid>
                     <Grid item xs={6} align="right"> 
                         <Typography variant="body1" className={classes.rightPadding}>
-                            {getRemainingText(vignette.valid_from, vignette.vignetteType.duration)}
+                            {getRemainingText(vignette.valid_from, vignetteType.duration)}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -108,7 +114,7 @@ const HistoryVignette = ({ vignette }) => {
                         </Grid>
                         <Grid item xs={6} align="right"> 
                             <Typography variant="body1" className={classes.rightPadding}>
-                                {vignette.vignetteType.price} Kč
+                                {vignetteType.price} Kč
                             </Typography>
                         </Grid>
                     </Grid>
@@ -127,9 +133,6 @@ const HistoryVignette = ({ vignette }) => {
                     </CardActions>
                 </Collapse>
             </CardContent>
-
-
-            
       </Card>
     )
 }
