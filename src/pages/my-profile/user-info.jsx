@@ -79,6 +79,17 @@ const UserInfo = () => {
             <Grid container>
                 <Grid item xs={11}>
                     <Grid container className={classes.content}>
+                        <Grid item xs={3}>
+                            <Typography variant='button' className={classes.label}>  
+                                Email
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={9} style={{paddingBottom: isEditing ? '25px' : '0'}}>
+                            <Typography variant='body1'>
+                                {localUser.email}
+                            </Typography>
+                        </Grid>
                         {Object.keys(formLabels).map((key, i) => 
                             <Fragment key={i}>
                         
