@@ -30,3 +30,17 @@ export const patchUser = createAsyncThunk(
             return rejectWithValue(err.response.error || err)
         }
 })
+
+export const fetchUserHistory = createAsyncThunk(
+    'users/fetchUserHistory',
+    async (id, { rejectWithValue }) => {
+
+        try {
+            
+            const response = await axios.get(`users/${id}/history`)
+            return response.data;
+            
+        } catch (err) {
+            return rejectWithValue(err.response.error || err)
+        }
+})
