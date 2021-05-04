@@ -38,7 +38,16 @@ const Overview = () => {
   }
 
   const handleReloadState = () => {
-    dispatch(fetchVignetteTypes())
+    dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
+        !!payload?.response?.data?.detail && setEmptyVignettes(true);
+
+        dispatch(fetchVignetteTypes())
+    })
+
+
+    
+
+    setModalState(null)
   }
 
   const { vignettes, types, pending, error } = vignettesState;

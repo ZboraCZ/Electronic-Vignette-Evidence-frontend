@@ -34,7 +34,10 @@ export const slice = createSlice({
         },
         [patchVignetteType.fulfilled]: (state, action) => {
             state.pending = false
-            state.types = action.payload
+            const newArr = state.types;
+            const index = newArr.findIndex(type => type.id == action.payload.id);
+            newArr[index] = action.payload
+            state.types = [...newArr];
         },
         [patchVignetteType.rejected]: (state, action) => {
             state.pending = false

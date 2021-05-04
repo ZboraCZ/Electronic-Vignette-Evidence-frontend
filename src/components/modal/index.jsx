@@ -53,13 +53,8 @@ const Modal = ({ state, onReloadState }) => {
         })
         onReloadState()
       }
-      
+      handleClose()
     })
-   
-    
-    
-    
-    handleClose()
   }
 
   const handleDelay = () => {
@@ -81,10 +76,8 @@ const Modal = ({ state, onReloadState }) => {
         })
         onReloadState()
       }
-     
+      //handleClose()
     })
-    handleClose()
-    
   }
 
   const handleRemove = () => {
@@ -92,8 +85,10 @@ const Modal = ({ state, onReloadState }) => {
     dispatch(deleteVignette(state.vignette.id)).then(res => {
       setMessage({ state: 'success', desc: 'Známka smazána.' })
       onReloadState()
+      //handleClose()
     })
-    handleClose()
+    
+
   }
 
   const handleCloseMessage = () => {
