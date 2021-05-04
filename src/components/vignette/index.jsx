@@ -137,7 +137,7 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                             <Grid container>
                                 <Grid item xs={6}>
                                     <Typography variant="subtitle1">
-                                        DATUM ZAKOUPENÍ
+                                        ZAKOUPENO
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6} align="right"> 

@@ -37,6 +37,10 @@ const Overview = () => {
     })
   }
 
+  const handleReloadState = () => {
+    dispatch(fetchVignetteTypes())
+  }
+
   const { vignettes, types, pending, error } = vignettesState;
 
     if (pending)
@@ -54,11 +58,18 @@ const Overview = () => {
             <Grid container spacing={1}>
                 {vignettes.map((v, i) => (
                     <Grid item xs={6} sm={6} key={i}>
-                        <Vignette handleMenuAction={openModal} licensePlate={v.license_plate} types={types} />
+                        <Vignette 
+                            handleMenuAction={openModal} 
+                            licensePlate={v.license_plate} 
+                            types={types} 
+                        />
                     </Grid>
                 ))}
             </Grid>
-            <Modal state={modalState} />
+            <Modal 
+                state={modalState} 
+                onReloadState={handleReloadState} 
+            />
         </div>
     )
 }

@@ -31,6 +31,7 @@ const LicensePlateValidator = (props) => {
             variant='outlined'
             className={props.state === true ? classes.success : ''}
             disabled={props.pending ? true : false}
+            style={props.style}
             InputProps={{
                 inputComponent: LPMask,
                 value: lp,

@@ -86,10 +86,10 @@ const Home = () => {
       </Grid>
 
       <Grid container spacing={1} className={classes.root}>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={6}>
           <LPValidity />
         </Grid>
-        <Grid item xs={12} sm={8}>
+        <Grid item xs={12} sm={6}>
           <Accordion data={articles.slice(0, 3)} />
           <Grid
             container

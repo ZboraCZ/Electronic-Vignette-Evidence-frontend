@@ -18,12 +18,14 @@ export const postVignetteBuy = createAsyncThunk(
 
 export const fetchVignetteValidate = (licensePlate) => axios.get(`vignettes/${licensePlate}`)
 
+export const fetchLPValidator = (licensePlate) => axios.get(`vignettes/${licensePlate}/validate`)
+
 export const postVignetteExtend = createAsyncThunk(
     'vignettes/postVignetteExtend',
-    async ({ id, vignette_type_id, days}, { rejectWithValue }) => {
+    async ({ id, vignette_type_id}, { rejectWithValue }) => {
 
         try {
-            const response = await axios.post(`vignettes/${id}/extend`, {vignette_type_id, days})
+            const response = await axios.post(`vignettes/${id}/extend`, { vignette_type_id })
             return response.data;
         
         } catch (err) {
@@ -35,10 +37,10 @@ export const postVignetteExtend = createAsyncThunk(
 
 export const postVignetteDelay = createAsyncThunk(
     'vignettes/postVignetteDelay',
-    async ({ id, }, { rejectWithValue }) => {
+    async ({ id, delay_date }, { rejectWithValue }) => {
 
         try {
-            const response = await axios.post(`vignettes/${id}/delay`, {})
+            const response = await axios.post(`vignettes/${id}/delay`, {delay_date})
             return response.data;
         
         } catch (err) {

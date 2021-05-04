@@ -34,7 +34,7 @@ const ModalExtend = ({ vignette, handleExtended }) => {
       //console.log(vignette, selectedType);
       handleExtended({
         id: vignette.id, 
-        duration: selectedType.duration
+        vignetteType: selectedType
       })
       
     }, [selectedType])

@@ -18,14 +18,14 @@ import {
   deleteVignette
 } from 'api/vignettes';
 
-const Modal = ({ state }) => {
+const Modal = ({ state, onReloadState }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const typesState = useSelector(vignetteTypes);
 
   const [open, setOpen] = useState(false);
   const [extended, setExtended] = useState(null);
-  const [delayed, setDelayed] = useState(null);
+  const [delayed, setDelayed] = useState(new Date());
   const [removed, setRemoved] = useState(null);
   const [message, setMessage] = useState(null);
 
@@ -36,36 +36,64 @@ const Modal = ({ state }) => {
   const handleClose = () => setOpen(false);
 
   const handleExtend = () => {
-    console.log('state extend', state, extended)
-    /*
+   
     dispatch(postVignetteExtend({ 
       id: extended.id,
-      vignette_type_id: extended.duration,
-      days: extended.duration.split(' ')[0]
+      vignette_type_id: extended.vignetteType.id
     })).then(res => {
-      setMessage('Známka prodloužena')
+      if (res.error?.message === "Rejected") {
+        setMessage({ 
+          state: 'error', 
+          desc: 'Vyskytla se chyba. Známku nelze prodloužit.'
+        })
+      } else {
+        setMessage({ 
+          state: 'success', 
+          desc: 'Známka prodloužena.'
+        })
+        onReloadState()
+      }
+      
     })
-    */
+   
+    
     
     
     handleClose()
   }
 
   const handleDelay = () => {
-    console.log(delayed)
-    /*dispatch(postVignetteDelay()).then(res => {
-      setMessage('Známka odložena')
+    //console.log(delayed, state)
+    
+    dispatch(postVignetteDelay({
+      id: state.vignette.id,
+      delay_date: delayed
+    })).then(res => {
+      if (res.error?.message === "Rejected") {
+        setMessage({ 
+          state: 'error',
+          desc: 'Známka nelze odložit. Platnost známky již začala.' 
+        })
+      } else {
+        setMessage({ 
+          state: 'success',
+          desc: 'Známka odložena.' 
+        })
+        onReloadState()
+      }
+     
     })
-    */
+    handleClose()
+    
   }
 
   const handleRemove = () => {
-    /*
+    //console.log(state.vignette.id)
     dispatch(deleteVignette(state.vignette.id)).then(res => {
-      setMessage('Známka smazána')
+      setMessage({ state: 'success', desc: 'Známka smazána.' })
+      onReloadState()
     })
-    */
-   //console.log(state.vignette.id)
+    handleClose()
   }
 
   const handleCloseMessage = () => {
@@ -127,9 +155,9 @@ const Modal = ({ state }) => {
         <MuiAlert 
           elevation={6} 
           variant="filled" 
-          onClose={handleCloseMessage} severity="success"
+          onClose={handleCloseMessage} severity={message?.state === 'success' ? 'success' : 'error'}
         >
-          {message}
+          {message?.desc}
         </MuiAlert>
       </Snackbar>
 
