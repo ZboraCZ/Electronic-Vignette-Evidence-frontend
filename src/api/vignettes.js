@@ -33,4 +33,4 @@ export const postVignetteExtend = createAsyncThunk(
 
 export const fetchUserVignettes = (userId) => axios.get(`users/${userId}/vignettes`)
 
-export const patchUserVignetteEdit = (userId, vignette) => axios.patch(`users/${userId}/vignettes/edit`, vignette)
+export const patchUserVignetteEdit = (vignette) => axios.patch(`vignettes/${vignette.vignetteId}/edit`, vignette)

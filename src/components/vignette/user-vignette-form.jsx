@@ -52,7 +52,7 @@ export const UserVignetteForm = ({ user, vignette }) => {
         modifiedVignette.userId = user.id
 
         // TODO: axios patch route for modifiedVignette 
-        patchUserVignetteEdit(user.id, modifiedVignette)
+        patchUserVignetteEdit(modifiedVignette)
             .then((response) => {
                 setModifiedVignette(response.data)
                 setLoading(false)
