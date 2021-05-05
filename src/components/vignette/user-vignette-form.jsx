@@ -25,14 +25,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const UserVignetteForm = ({ user, vignette }) => {
+export const UserVignetteForm = ( {user, vignette} ) => {
+    console.log(vignette)
+    console.log(user)
+    
     const classes = useStyles();
     const [loading, setLoading] = useState(false)
 
     const [modifiedVignette, setModifiedVignette] = useState(vignette)
-    if(modifiedVignette.id_vignette_type == null){
-        modifiedVignette.id_vignette_type = vignette.vignetteType.id
-    }
+
+
     const displayHooks = () => {
         console.log(modifiedVignette)
         console.log(user)
@@ -62,18 +64,18 @@ export const UserVignetteForm = ({ user, vignette }) => {
                 setLoading(false)
             })
     }
-
+    console.log(modifiedVignette)
     return (
         <div style={{ width: '107%', marginTop: '25px' }}>
             <form  onSubmit={SubmitVignetteEdit} className={classes.vignetteForm} noValidate autoComplete="off">
-                <input type="hidden" id="vignetteId" name="vignetteId" value={modifiedVignette.vignetteId} />
-                <TextField className={classes.formField} name="licensePlate" onChange={handleChange} label="SPZ" variant="outlined" value={modifiedVignette.licensePlate} />                
+                <input type="hidden" id="vignetteId" name="vignetteId" value={modifiedVignette.id} />
+                <TextField className={classes.formField} name="licensePlate" onChange={handleChange} label="SPZ" variant="outlined" value={modifiedVignette.license_plate} />                
                 <FormControl variant="outlined" className={classes.formField}>
                     <Select
                         labelId="demo-simple-select-filled-label"
                         id="demo-simple-select-filled"
                         name="id_vignette_type"
-                        value={modifiedVignette.id_vignette_type}
+                        value={modifiedVignette.vignette_type_id}
                         onChange={handleChange}
                         >
                         <MenuItem value={1}>10ti denní</MenuItem>
@@ -85,7 +87,7 @@ export const UserVignetteForm = ({ user, vignette }) => {
                 
                 
                 
-                <TextField className={classes.formField} name="validFrom" onChange={handleChange} label="Validní od" variant="outlined" value={modifiedVignette.validFrom} />
+                <TextField className={classes.formField} name="validFrom" onChange={handleChange} label="Validní od" variant="outlined" value={modifiedVignette.valid_from} />
                 <Button
                     variant="contained"
                     disabled={loading}
@@ -103,4 +105,5 @@ export const UserVignetteForm = ({ user, vignette }) => {
 
         </div>
     )
+    
 }

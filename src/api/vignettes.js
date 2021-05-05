@@ -31,6 +31,31 @@ export const postVignetteExtend = createAsyncThunk(
         
 })
 
-export const fetchUserVignettes = (userId) => axios.get(`users/${userId}/vignettes`)
+export const getUser = (userMail) => axios.get(`users/find/${userMail}`)
+
+export const getUserLicensePlates = (userMail) => axios.get(`users/find/${userMail}`)
 
 export const patchUserVignetteEdit = (vignette) => axios.patch(`vignettes/${vignette.vignetteId}/edit`, vignette)
+
+
+
+
+
+export const fetchLicencePlates = createAsyncThunk(
+    'users/fetchUserLicencePlates',
+    async (id, { rejectWithValue }) => {
+
+        try {
+            
+            const response = await axios.get(`users/${id}/licence_plates`)
+            return response.data;
+            
+        } catch (err) {
+            return rejectWithValue(err.response.error || err)
+        }
+})
+
+
+export const fetchVignetteByLicencePlate = (lp) => {
+    return axios.get(`vignettes/${lp}`)
+}

@@ -5,67 +5,80 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid'
 
-import { fetchVignetteTypes, patchVignetteType } from 'api/vignette-types';
-import { vignetteTypes } from 'store/vignettes';
-import Loader from 'components/shared/loader';
-import { keys } from '@material-ui/core/styles/createBreakpoints';
-
 import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography } from '@material-ui/core';
-import { fetchUserVignettes } from 'api/vignettes';
-import { UserVignetteForm } from 'components/vignette/user-vignette-form'
+import { getUser, fetchLicencePlates, fetchVignetteByLicencePlate } from 'api/vignettes';
+import { UserVignetteForm } from 'components/vignette/user-vignette-form';
+import Button from '@material-ui/core/Button';
+import SearchIcon from '@material-ui/icons/Search';
 
 const ManageUsers = () => {
 
+  const dispatch = useDispatch();
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      padding: theme.spacing(4)
+    },
+    button: {
+      lineHeight: 2.6
+    },
+    formField: {
+        marginRight: 20,
+    },
+  }))
+
   const classes = useStyles();
+  const [loading, setLoading] = useState(false)
 
   const [user, setUser] = useState(null)
+  const [licensePlates, setLicensePlates] = useState(null)
   const [vignettes, setVignettes] = useState(null)
+  const [userMail, setUserMail] = useState("")
 
   useEffect(() => {
     if(user !== null) {
-      getUserVignettes(user.id)
+      getUserLicensePlates()
     }
   }, [user])
+ 
+  const handleUserMailChange = (event) => {
+    setUserMail(event.target.value)
+  };
 
-  const tempVignettes = [{
-    vignetteId: 0,
-    licensePlate: '4A2 3000',
-    serialNumber: 'XXX',
-    vignetteType: {
-      id: 1,
-      name: '10denni',
-      display_name: '10ti denní',
-      price: 310,
-      duration: '10 00:00:00'
-    },
-    usedId: 0,
-    validFrom: '2021-03-27'
-  }]
-
-  const [isLoading, setLoading] = useState(null)
-
-  /* GONNA BE USED WHEN BE IMPLEMENTED */
-  const getUserVignettes = (userId) => {
+  const findUser = (event) => {
+    event.preventDefault();
     setLoading(true)
-    setTimeout(() => {
-      fetchUserVignettes(userId)
-        .then(res => {
-          //setVignettes(res.data)
-          setLoading(false);
-          setVignettes(res.data)
-          DisplayUserVignettes(res.data)
-        })
-        .catch(err => {
-          console.log(err)
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if ( re.test(userMail) ) {
+        getUser(userMail)
+        .then((responseUser) => {
+          setUser(responseUser.data)
           setLoading(false)
-        });
-    }, 1500);
+      })
+    }
+    else {
+        console.log("Wrong mail format")
+    }
   }
 
-  
+  const getUserLicensePlates = () => {
+    setLoading(true)
+    setTimeout(() => {
+      dispatch(
+        fetchLicencePlates(user.id)).then(({ meta, payload }) => {
+          if(meta.requestStatus === 'fulfilled') {
+            let platesArr = []
+            payload.map((lObj,i) => {
+                platesArr[i] = lObj.license_plate
+            })
+            setLicensePlates(platesArr)
+          }
+          
+        })
+    }, 1500);
+    setLoading(false)
+  }
 
   return (
     <Paper className={classes.root}>
@@ -82,9 +95,23 @@ const ManageUsers = () => {
         </Grid>
 
         <Grid item>
-          <FindUserInput selectOption={option => setUser(option)} />
+          <form onSubmit={findUser} className={classes.userForm} noValidate autoComplete="off">
+            <TextField className={classes.formField} name="email" onChange={handleUserMailChange} label="email" variant="outlined" value={userMail} />                
+            <Button
+                    variant="contained"
+                    disabled={loading}
+                    color="primary"
+                    size="large"
+                    className={classes.button}
+                    startIcon={<SearchIcon />}
+                    type="submit"
+                >
+                    Hledat
+                    </Button>
+          </form>
         </Grid>
       </Grid>
+      <br/><br/>
 
       {user && (
         <>
@@ -108,13 +135,15 @@ const ManageUsers = () => {
             Zakoupené známky:
           </Typography>
 
-          <div>
-            {/*getUserVignettes(user.id)*/}
-
-            <DisplayUserVignettes user={user} vignettes={tempVignettes} />
-          </div>
+          
         </>
       )}
+      <div>
+            {
+                (licensePlates !== null) &&
+                  DisplayLicensePlates(user, licensePlates)
+            }
+          </div>
 
     </Paper>
   )
@@ -122,148 +151,60 @@ const ManageUsers = () => {
 
 export default ManageUsers
 
-const DisplayUserVignettes = ({user, vignettes}) => {
+export const DisplayLicensePlates = (user, licensePlates) => {
 
-  console.log(vignettes)
 
-  if (vignettes != null) {
-    return vignettes.map((v, i) => (
-          <UserVignetteForm key={i} user={user} vignette={v} />
-      ))
+  
+
     
+    /*if(licensePlates.length > 1){*/
+      
+      return licensePlates.map((plate, i) => (
+          <div key={i}>
+              <h2>{plate}</h2>
+              <DisplayUserVignettes user={user} plate={plate} />
+          </div>
+      ))
+      
+    /*}
+    else {
+      console.log(getVignettes(licensePlates[0]))
+      return (
+          <div>
+              <h2>{licensePlates[0]}</h2>
+              <DisplayUserVignettes user={user} vignettes={getVignettes(licensePlates[0])} />
+          </div>
+      )
+    }*/
+  
+  
+}
+
+const DisplayUserVignettes = ({user, plate}) => {
+
+  const [vignette, setVignette] = useState(null)
+
+  useEffect(() => {
+    if(plate !== null) {
+      getVignettes(plate)
+    }
+  }, [plate])
+
+    const getVignettes = (plate) => {
+      fetchVignetteByLicencePlate(plate).then((responseVignettes) => {
+        setVignette(responseVignettes.data[0])
+      })
+    }
+
+
+  if (vignette != null) {
+
+      return <UserVignetteForm user={user} vignette={vignette} />
+
   }
   return (
     <div></div>
   )
-
-
-
-}
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(4)
-  }
-}))
-
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
-
-const FindUserInput = (props) => {
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState(null);
-
-
-  let selectedUser = null;
-
-  useEffect(() => {
-    setUsers(mockUsers)
-
-    //setOptions()
-  }, [])
-
-  useEffect(() => {
-
-    if (!loading) {
-      return
-    }
-    console.log('executed')
-
-  }, [loading])
-
-  const handleOptionChange = (option, value) => {
-    //console.log(option, value)
-    const user = users.find(user => {
-      const finKey = Object.keys(user).find(key => user[key] === value)
-
-      return finKey ? user[finKey] : null;
-    })
-
-    selectedUser = user
-
-    //setSelectedOption()
-    return option === value
-  }
-
-  const handleChange = (e) => {
-    console.log('clear clicked')
-    const val = e.target.value;
-    const isUser = users.find(user =>
-      user.email.includes(val) ||
-      user.first_name.includes(val) ||
-      user.last_name.includes(val) ||
-      user.phone.includes(val)
-    )
-
-
-    if (isUser) {
-      const keys = Object.keys(isUser).filter(key => key != 'role' && key != 'id');
-
-      const key = keys.find(key => {
-        return isUser[key].includes(val)
-      });
-      // key = first_name
-      setOptions(users.map(user => user[key]))
-    }
-  }
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-
-    if (selectedUser) {
-      //console.log(selectedUser)
-      props.selectOption(selectedUser)
-    }
-
-  }, [open]);
-
-  const handleClear = (r) => {
-    if (r === 'clear') {
-      selectedUser = null
-      setOptions([])
-    }
-  }
-  return (
-    <Autocomplete
-      style={{ width: 300 }}
-      open={open}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
-      getOptionSelected={handleOptionChange}
-      getOptionLabel={(option) => option}
-      options={options}
-      loading={loading}
-      onInputChange={(e, v, r) => handleClear(r)}
-      renderInput={(params) => (
-        <TextField
-          onChange={handleChange}
-          {...params}
-          label="Uživatel"
-          variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <Fragment>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                {params.InputProps.endAdornment}
-              </Fragment>
-            ),
-          }}
-        />
-      )}
-    />
-  );
 }
 
 
