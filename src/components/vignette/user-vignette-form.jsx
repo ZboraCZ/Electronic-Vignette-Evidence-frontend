@@ -26,20 +26,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 export const UserVignetteForm = ( {user, vignette} ) => {
-    console.log(vignette)
-    console.log(user)
-    
     const classes = useStyles();
     const [loading, setLoading] = useState(false)
 
     const [modifiedVignette, setModifiedVignette] = useState(vignette)
-
-
-    const displayHooks = () => {
-        console.log(modifiedVignette)
-        console.log(user)
-    }
-
 
     const handleChange = (event) => {
         let modifiedName = event.target.name 
@@ -50,31 +40,30 @@ export const UserVignetteForm = ( {user, vignette} ) => {
     const SubmitVignetteEdit = (event) => {
         event.preventDefault();
         setLoading(true)
-        delete modifiedVignette.vignetteType
-        modifiedVignette.userId = user.id
 
         // TODO: axios patch route for modifiedVignette 
+        console.log(modifiedVignette)
         patchUserVignetteEdit(modifiedVignette)
             .then((response) => {
                 setModifiedVignette(response.data)
                 setLoading(false)
+                console.log(response.data)
             })
             .catch((e) => {
                 console.log(e)
                 setLoading(false)
             })
     }
-    console.log(modifiedVignette)
+
     return (
         <div style={{ width: '107%', marginTop: '25px' }}>
             <form  onSubmit={SubmitVignetteEdit} className={classes.vignetteForm} noValidate autoComplete="off">
-                <input type="hidden" id="vignetteId" name="vignetteId" value={modifiedVignette.id} />
-                <TextField className={classes.formField} name="licensePlate" onChange={handleChange} label="SPZ" variant="outlined" value={modifiedVignette.license_plate} />                
+                <TextField className={classes.formField} name="license_plate" onChange={handleChange} label="SPZ" variant="outlined" value={modifiedVignette.license_plate} />                
                 <FormControl variant="outlined" className={classes.formField}>
                     <Select
                         labelId="demo-simple-select-filled-label"
                         id="demo-simple-select-filled"
-                        name="id_vignette_type"
+                        name="vignette_type_id"
                         value={modifiedVignette.vignette_type_id}
                         onChange={handleChange}
                         >
@@ -87,7 +76,7 @@ export const UserVignetteForm = ( {user, vignette} ) => {
                 
                 
                 
-                <TextField className={classes.formField} name="validFrom" onChange={handleChange} label="Validní od" variant="outlined" value={modifiedVignette.valid_from} />
+                <TextField className={classes.formField} name="valid_from" onChange={handleChange} label="Validní od" variant="outlined" value={modifiedVignette.valid_from} />
                 <Button
                     variant="contained"
                     disabled={loading}

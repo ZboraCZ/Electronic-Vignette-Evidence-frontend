@@ -35,7 +35,7 @@ export const getUser = (userMail) => axios.get(`users/find/${userMail}`)
 
 export const getUserLicensePlates = (userMail) => axios.get(`users/find/${userMail}`)
 
-export const patchUserVignetteEdit = (vignette) => axios.patch(`vignettes/${vignette.vignetteId}/edit`, vignette)
+export const patchUserVignetteEdit = (vignette) => axios.patch(`vignettes/${vignette.id}/edit`, vignette)
 
 
 
