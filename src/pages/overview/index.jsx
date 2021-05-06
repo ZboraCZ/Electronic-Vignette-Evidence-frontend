@@ -1,42 +1,84 @@
-import { Grid } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 
-import Vignette from 'components/vignette'
-import Loader from 'components/shared/loader'
+import { Grid, Typography } from '@material-ui/core';
+import { fetchLicencePlates } from 'api/vignettes';
+import { getVignettes } from 'store/user';
 
-import Modal from 'components/modal'
+import Vignette from 'components/vignette';
+import Alert from 'components/shared/alert';
+import Loader from 'components/shared/loader';
+import Modal from 'components/modal';
+import { getUserId } from 'store/auth';
+import { fetchVignetteTypes } from 'api/vignette-types'
 
 const Overview = () => {
+  const dispatch = useDispatch()
+  const vignettesState = useSelector(getVignettes)
+  const userId = useSelector(getUserId)
+  
+  const [emptyVignettes, setEmptyVignettes] = useState(false);
+  const [modalState, setModalState] = useState(null)
+  
+  useEffect(() => {
+    dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
+        !!payload?.response?.data?.detail && setEmptyVignettes(true);
+    })
 
-    //mocked vignette
-    const vignettes = [{
-        vignetteId: 0,
-        licensePlate: '4A2 3000',
-        serialNumber: 'XXX',
-        vignetteType: {
-            id: 1,
-            name: '10denni',
-            display_name: '10ti denní',
-            price: 310,
-            duration: '10 00:00:00'
-        },
-        usedId: 0,
-        validFrom: '2021-03-27'
-    }]
+    dispatch(fetchVignetteTypes())
+
+  }, [dispatch])
+
+  const openModal = (action, vignette) => {
     
+    setModalState({
+        action, 
+        vignette
+    })
+  }
+
+  const handleReloadState = () => {
+    dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
+        !!payload?.response?.data?.detail && setEmptyVignettes(true);
+
+        dispatch(fetchVignetteTypes())
+    })
+
+
     
-    if (!vignettes.length)
+
+    setModalState(null)
+  }
+
+  const { vignettes, types, pending, error } = vignettesState;
+
+    if (pending)
         return <Loader />
+
+    /*
+    else if (error)
+        return <Alert error={error} />
+    */
+    else if (emptyVignettes)
+        return <Typography variant='h5' align='center'>Nemáte zakoupené žádné známky</Typography> 
 
     return (
         <div>
             <Grid container spacing={1}>
-                {[1, 2, 3, 4, 5].map((v, i) => (
-                    <Grid item xs={6} sm={4} key={i}>
-                        <Vignette vignette={vignettes[0]} />
+                {vignettes.map((v, i) => (
+                    <Grid item xs={6} sm={6} key={i}>
+                        <Vignette 
+                            handleMenuAction={openModal} 
+                            licensePlate={v.license_plate} 
+                            types={types} 
+                        />
                     </Grid>
                 ))}
             </Grid>
-            {/*<Modal />*/}
+            <Modal 
+                state={modalState} 
+                onReloadState={handleReloadState} 
+            />
         </div>
     )
 }

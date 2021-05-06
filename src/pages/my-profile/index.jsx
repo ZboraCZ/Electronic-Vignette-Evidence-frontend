@@ -12,6 +12,7 @@ import VignetteTypesTable from './vignette-types-table'
 import UserInfo from './user-info';
 import ManageUsers from './manage-users';
 import Overview from 'pages/overview';
+import History from 'pages/history';
 import { tabs, adminTabs } from './user-tabs'
 
 const MyProfile = (props) => {
@@ -78,6 +79,10 @@ const MyProfile = (props) => {
                      
             <TabPanel value={tab} index={1}>
                 <UserInfo />
+            </TabPanel>
+
+            <TabPanel value={tab} index={2}>
+                <History />
             </TabPanel>
 
             <TabPanel value={tab} index={4}>

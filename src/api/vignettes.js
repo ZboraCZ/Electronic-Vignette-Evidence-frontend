@@ -18,17 +18,49 @@ export const postVignetteBuy = createAsyncThunk(
 
 export const fetchVignetteValidate = (licensePlate) => axios.get(`vignettes/${licensePlate}`)
 
+export const fetchLPValidator = (licensePlate) => axios.get(`vignettes/${licensePlate}/validate`)
+
 export const postVignetteExtend = createAsyncThunk(
     'vignettes/postVignetteExtend',
-    async ({ vignetteId, days }, { rejectWithValue }) => {
+    async ({ id, vignette_type_id}, { rejectWithValue }) => {
+
         try {
-            const response = await axios.post(`vignettes/${vignetteId}/extend`, days)
+            const response = await axios.post(`vignettes/${id}/extend`, { vignette_type_id })
             return response.data;
         
         } catch (err) {
             return rejectWithValue(err.response.error)
         }
+
         
+})
+
+export const postVignetteDelay = createAsyncThunk(
+    'vignettes/postVignetteDelay',
+    async ({ id, delay_date }, { rejectWithValue }) => {
+
+        try {
+            const response = await axios.post(`vignettes/${id}/delay`, {delay_date})
+            return response.data;
+        
+        } catch (err) {
+            return rejectWithValue(err.response.error)
+        }
+
+        
+})
+
+export const deleteVignette = createAsyncThunk(
+    'vignettes/deleteVignette',
+    async (id , { rejectWithValue }) => {
+
+        try {
+            const response = await axios.delete(`vignettes/${id}/remove`)
+            return response.data;
+        
+        } catch (err) {
+            return rejectWithValue(err.response.error)
+        }
 })
 
 export const getUser = (userMail) => axios.get(`users/find/${userMail}`)

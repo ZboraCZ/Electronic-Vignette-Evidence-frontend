@@ -6,11 +6,12 @@ import { Typography, Grid, TextField, MenuItem, Menu, IconButton, Button, Paper 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { fetchUser } from 'api/user';
-import { getUser} from 'store/user';
+import { getIsAdmin, getUser} from 'store/user';
 import { getUserId  } from 'store/auth';
 import { patchUser } from 'api/user'
 import LoadingButton from 'components/shared/loading-button'
 import Loader from 'components/shared/loader';
+import { fetchVignetteTypes } from 'api/vignette-types';
 
 
 const UserInfo = () => {
@@ -19,6 +20,8 @@ const UserInfo = () => {
     const dispatch = useDispatch();
     const userState = useSelector(getUser);
     const userId = useSelector(getUserId)
+    const isAdmin = useSelector(getIsAdmin)
+
     
     const [isEditing, setIsEditing] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -76,6 +79,17 @@ const UserInfo = () => {
             <Grid container>
                 <Grid item xs={11}>
                     <Grid container className={classes.content}>
+                        <Grid item xs={3}>
+                            <Typography variant='button' className={classes.label}>  
+                                Email
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={9} style={{paddingBottom: isEditing ? '25px' : '0'}}>
+                            <Typography variant='body1'>
+                                {localUser.email}
+                            </Typography>
+                        </Grid>
                         {Object.keys(formLabels).map((key, i) => 
                             <Fragment key={i}>
                         
@@ -102,9 +116,24 @@ const UserInfo = () => {
                                         />
                                     )}
                                 </Grid>
-                                
                             </Fragment>
                         )}
+                        {isAdmin && (
+                            <Fragment>
+                                <Grid item xs={3}>
+                                    <Typography variant='button' className={classes.label}>  
+                                        Role:
+                                    </Typography>
+                                </Grid>
+
+                                <Grid item xs={9}>
+                                    <Typography variant='body1'>
+                                        {localUser.role.name}
+                                    </Typography>
+                                </Grid>
+                            </Fragment>
+                        )}
+
                     </Grid>
                 </Grid>
 

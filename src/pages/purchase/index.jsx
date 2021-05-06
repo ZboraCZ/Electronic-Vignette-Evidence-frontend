@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import LoadingButton from 'components/shared/loading-button'
@@ -20,6 +21,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import Button from '@material-ui/core/Button'
 
 import { fetchVignetteTypes } from 'api/vignette-types';
 import { vignetteTypeById } from 'store/vignettes';
@@ -108,13 +110,35 @@ const Purchase = () => {
 
   if (buySuccess) 
     return (
-      <div className={classes.root}>
+      <div>
         <Paper className={classes.successPaper}>
-        <Alert severity="success">
-          <AlertTitle>Úspěch</AlertTitle>
-          Elektronická známa byla úspěšně zakoupena na SPZ: <strong>{lp}</strong>
-        </Alert>
+          <Alert severity="success">
+            <AlertTitle>Úspěch</AlertTitle>
+            Elektronická známa byla úspěšně zakoupena na SPZ: <strong>{lp}</strong>
+          </Alert>
         </Paper>
+        <div className={classes.successActions}>
+          <Grid 
+            container 
+            justify="flex-end"
+            alignItems="flex-end"
+            spacing={2}
+          >
+            <Grid item>
+              <Button color="primary" component={Link} to='/'>
+                Přejít na hlavní stránku
+              </Button>
+            </Grid>
+            {isAuth && (
+              <Grid item>
+                <Button color="primary" component={Link} to='/profil/zakoupene-znamky'>
+                  Přejít na přehled známek
+                </Button>
+              </Grid>
+            )}
+          </Grid>  
+        </div>
+
       </div>
     )
 
@@ -252,7 +276,7 @@ export default Purchase;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   paper: {
     width: '400px',
@@ -264,8 +288,11 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center'
   },
   successPaper: {
-    width: '600px',
+    width: '100%',
     height: 'auto'
+  },
+  successActions: {
+    width: '100%'
   },
   loadingButton: {
     width: '150px',
