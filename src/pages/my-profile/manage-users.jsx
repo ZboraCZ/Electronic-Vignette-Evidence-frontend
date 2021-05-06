@@ -56,9 +56,14 @@ const ManageUsers = () => {
           setUser(responseUser.data)
           setLoading(false)
       })
+      .catch((e) => {
+        setLoading(false)
+        
+      })
     }
     else {
         console.log("Wrong mail format")
+        setLoading(false)
     }
   }
 
@@ -152,37 +157,17 @@ const ManageUsers = () => {
 export default ManageUsers
 
 export const DisplayLicensePlates = (user, licensePlates) => {
-
-
-  
-
     
-    /*if(licensePlates.length > 1){*/
-      
       return licensePlates.map((plate, i) => (
           <div key={i}>
-              <h2>{plate}</h2>
               <DisplayUserVignettes user={user} plate={plate} />
           </div>
       ))
-      
-    /*}
-    else {
-      console.log(getVignettes(licensePlates[0]))
-      return (
-          <div>
-              <h2>{licensePlates[0]}</h2>
-              <DisplayUserVignettes user={user} vignettes={getVignettes(licensePlates[0])} />
-          </div>
-      )
-    }*/
-  
-  
 }
 
 const DisplayUserVignettes = ({user, plate}) => {
 
-  const [vignette, setVignette] = useState(null)
+  const [vignettes, setVignettes] = useState(null)
 
   useEffect(() => {
     if(plate !== null) {
@@ -192,19 +177,20 @@ const DisplayUserVignettes = ({user, plate}) => {
 
     const getVignettes = (plate) => {
       fetchVignetteByLicencePlate(plate).then((responseVignettes) => {
-        setVignette(responseVignettes.data[0])
+        setVignettes(responseVignettes.data)
       })
     }
 
 
-  if (vignette != null) {
-
-      return <UserVignetteForm user={user} vignette={vignette} />
-
+  if (vignettes != null) {
+    return vignettes.map((vignette) => <UserVignetteForm key={vignette.id} user={user} vignette={vignette}/>)
+  } 
+  else {
+    return (
+      <div></div>
+    )
   }
-  return (
-    <div></div>
-  )
+  
 }
 
 

@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
     },
     formField: {
-        width: '20%',
+        width: '22%',
         marginRight: 10,
         lineHeight: 2.6
     },
@@ -41,13 +41,10 @@ export const UserVignetteForm = ( {user, vignette} ) => {
         event.preventDefault();
         setLoading(true)
 
-        // TODO: axios patch route for modifiedVignette 
-        console.log(modifiedVignette)
         patchUserVignetteEdit(modifiedVignette)
             .then((response) => {
                 setModifiedVignette(response.data)
                 setLoading(false)
-                console.log(response.data)
             })
             .catch((e) => {
                 console.log(e)
