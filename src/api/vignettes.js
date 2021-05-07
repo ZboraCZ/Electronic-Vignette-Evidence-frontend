@@ -63,6 +63,16 @@ export const deleteVignette = createAsyncThunk(
         }
 })
 
+export const getUser = (userMail) => axios.get(`users/find/${userMail}`)
+
+export const getUserLicensePlates = (userMail) => axios.get(`users/find/${userMail}`)
+
+export const patchUserVignetteEdit = (vignette) => axios.patch(`vignettes/${vignette.id}/edit`, vignette)
+
+
+
+
+
 export const fetchLicencePlates = createAsyncThunk(
     'users/fetchUserLicencePlates',
     async (id, { rejectWithValue }) => {
@@ -77,8 +87,7 @@ export const fetchLicencePlates = createAsyncThunk(
         }
 })
 
+
 export const fetchVignetteByLicencePlate = (lp) => {
     return axios.get(`vignettes/${lp}`)
 }
-
-
