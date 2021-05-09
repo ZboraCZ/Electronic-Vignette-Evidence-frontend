@@ -23,10 +23,15 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
     useEffect(() => {
     
         fetchVignetteByLicencePlate(licensePlate).then(res => {
-
+          
+            const today = new Date().getTime();
+            const date = new Date(res.data[res.data.length - 1].valid_from).getTime()
+            
+            
             setVignette(prevState => ({ 
                 ...prevState, 
-                ...res.data[0]
+                ...res.data[res.data.length - 1],
+                hasStarted: (today >= date) 
             }));
         })
     }, []);
@@ -76,6 +81,8 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
         return `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()}`;
     }   
 
+    const lpFormat = (lp) => `${lp.substring(0, 3)} ${lp.substring(3 , lp.length)}`
+
     return (
         <Card className={classes.root}>
             <CardContent>
@@ -87,7 +94,7 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                 >
                   
                     <Typography variant="h4">
-                        {licensePlate}
+                        {lpFormat(licensePlate)}
                     </Typography>
                     <IconButton aria-label='settings' edge='end' onClick={handleClick}>  
                         <MoreVertIcon />
@@ -113,24 +120,49 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                             <Grid container>
                                 <Grid item xs={6}>
                                     <Typography variant="subtitle1">
-                                        VARIANTA
+                                    {presVignette.hasStarted ? 'VARIANTA' : (
+                                        <Chip 
+                                            size="small"
+                                            label="NEAKTIVNÍ"
+                                        />
+                                    )}
                                     </Typography>
                                 </Grid>
+
                                 <Grid item xs={6} align="right"> 
                                     <Typography variant="body1" className={classes.rightPadding}>
                                         {presVignette.vignetteType?.display_name}     
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <Typography variant="subtitle1">
-                                        ZBÝVÁ
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} align="right"> 
-                                    <Typography variant="body1" className={classes.rightPadding}>
-                                        {getDaysDiff(presVignette.valid_from, presVignette.vignetteType.duration)}
-                                    </Typography>
-                                </Grid>
+                                
+                                {presVignette.hasStarted ? (
+                                <>
+                                    <Grid item xs={6}>
+                                        <Typography variant="subtitle1">
+                                            ZBÝVÁ
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} align="right"> 
+                                        <Typography variant="body1" className={classes.rightPadding}>
+                                            {getDaysDiff(presVignette.valid_from, presVignette.vignetteType.duration)}
+                                        </Typography>
+                                    </Grid>   
+                                </>
+                                ) : (
+                                <>
+                                    <Grid item xs={6}>
+                                        <Typography variant="subtitle1">
+                                            ZAČÍNÁ
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} align="right"> 
+                                        <Typography variant="body1" className={classes.rightPadding}>
+                                            {dateFormat(presVignette.valid_from)}
+                                        </Typography>
+                                    </Grid>   
+                                </>
+                                )}
+                               
                             </Grid>
 
                             <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -143,6 +175,16 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                                 <Grid item xs={6} align="right"> 
                                     <Typography variant="body1" className={classes.rightPadding}>
                                         {dateFormat(presVignette.created)}     
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        AKTIVNí OD
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        {dateFormat(presVignette.valid_from)}     
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6}>
@@ -172,11 +214,7 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                             </CardActions>
                             </Collapse>
                         </>
-                    )}
-                
-
-
-                
+                    )}     
             </CardContent>
       </Card>
     )
@@ -202,4 +240,7 @@ const useStyles = makeStyles((theme) => ({
         rightPadding: {
             paddingRight: '10px',
         },
+        notActiveChip: {
+            float: 'right'
+        }
 }));

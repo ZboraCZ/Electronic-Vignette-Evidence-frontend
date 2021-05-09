@@ -36,7 +36,7 @@ const Modal = ({ state, onReloadState }) => {
   const handleClose = () => setOpen(false);
 
   const handleExtend = () => {
-   
+
     dispatch(postVignetteExtend({ 
       id: extended.id,
       vignette_type_id: extended.vignetteType.id
@@ -53,8 +53,9 @@ const Modal = ({ state, onReloadState }) => {
         })
         onReloadState()
       }
-      handleClose()
+      //handleClose()
     })
+    
   }
 
   const handleDelay = () => {

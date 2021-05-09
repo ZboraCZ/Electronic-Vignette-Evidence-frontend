@@ -62,12 +62,22 @@ const Purchase = () => {
   };
 
   const buyVignette = () => {
+    let date;
+    if (validFrom === 'today') {
+      date = new Date()
+    } else if (validFrom === 'tomorrow') {
+      const today = new Date()
+      let tomorrow =  new Date()
+      date = new Date(tomorrow.setDate(today.getDate() + 1))
+    } else if (validFrom === 'date') {
+      date = selectedDate
+    }
 
     const { user } = userState;
 
     let vignetteBuy = {
       id_vignette_type: id,
-      valid_from: selectedDate
+      valid_from: date
     }
 
     if (isAuth && user) {
@@ -78,11 +88,12 @@ const Purchase = () => {
     } 
 
     const cleanLP = lp.replace(/\s/g, '')
+    
     dispatch(
       postVignetteBuy({ licensePlate: cleanLP, vignette: vignetteBuy })).then(({ meta }) => {
         meta.requestStatus === 'fulfilled' && setBuySuccess(true) 
       })
-       
+
   }
 
   const validFormat = (lp) => {
