@@ -34,7 +34,7 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                 hasStarted: (today >= date) 
             }));
         })
-    }, []);
+    }, [licensePlate]);
 
 
     useEffect(() => {
