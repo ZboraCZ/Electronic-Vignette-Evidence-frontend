@@ -10,50 +10,48 @@ import Loader from 'components/shared/loader';
 const Vignette = ({ licensePlate, handleMenuAction, types }) => {
     
     const classes = useStyles();
-    const dispatch = useDispatch();
-    const handleExpandClick = () => setExpanded(!expanded);
-
-    const [vignette, setVignette] = useState(null);
+    
+    const [vignette, setVignette] = useState([]);
     const [expanded, setExpanded] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [presVignette, setPresVignette] = useState(null);
-
+    const [vignettes, setVignettes] = useState([]);
+    const [v, setV] = useState(null);
+    
     const open = Boolean(anchorEl);
+
+    const handleExpandClick = () => setExpanded(!expanded);
 
     useEffect(() => {
     
         fetchVignetteByLicencePlate(licensePlate).then(res => {
-          
-            const today = new Date().getTime();
-            const date = new Date(res.data[res.data.length - 1].valid_from).getTime()
-            
-            
-            setVignette(prevState => ({ 
-                ...prevState, 
-                ...res.data[res.data.length - 1],
-                hasStarted: (today >= date) 
-            }));
+
+            setVignette(res.data)
         })
     }, [licensePlate]);
 
 
     useEffect(() => {
-        if (!!Object.keys(types).length && !!vignette) {
+        
+        if (!!Object.keys(types).length && !!Object.keys(vignette).length) {
 
-            const vignetteType = types.find(type => type.id == vignette.vignette_type_id);
-
-            const updatedVignette = {
-                ...vignette,
-                vignetteType
-            }
-            setPresVignette(updatedVignette)
+            const vignettes = vignette.map(v => ({ 
+                ...v, 
+                vignetteType: types.find(type => type.id == v.vignette_type_id),
+                hasStarted: () => {
+                    const today = new Date().getTime();
+                    const date = new Date(v.valid_from).getTime()
+                    return (today >= date)
+                } 
+            }))
+            setVignettes(vignettes);
         }
        
     }, [types, vignette])
 
 
 
-    const handleClick = (event) => {
+    const handleClick = (event, v) => {
+        setV(v);
         setAnchorEl(event.currentTarget);
     };
 
@@ -61,8 +59,9 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
         setAnchorEl(null);
     };
 
-    const handleAction = (action) => handleMenuAction(action, presVignette)
-
+    const handleAction = (action) => {
+        handleMenuAction(action, v)
+    }
 
     const getDaysDiff = (valid, duration) => {
         const validFrom = new Date(valid)
@@ -72,7 +71,7 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
 
         if (diffDays === 1) 
             return `${diffDays} den`;
-        
+            
         return `${diffDays} dní`;
     }
 
@@ -83,121 +82,119 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
 
     const lpFormat = (lp) => `${lp.substring(0, 3)} ${lp.substring(3 , lp.length)}`
 
-    return (
-        <Card className={classes.root}>
-            <CardContent>
-                <Grid 
-                    container
-                    direction="row"
-                    justify="space-between"
-                    alignItems="center"
-                >
-                  
-                    <Typography variant="h4">
-                        {lpFormat(licensePlate)}
-                    </Typography>
-                    <IconButton aria-label='settings' edge='end' onClick={handleClick}>  
-                        <MoreVertIcon />
-                    </IconButton>
-
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        onClick={handleClose}
+    return vignettes.map((v, i) => (
+        <Grid item xs={6} sm={6} key={i}>
+            <Card className={classes.root}>
+                <CardContent>
+                    <Grid 
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
                     >
-                        <MenuItem onClick={handleExpandClick}>{'ZOBRAZIT '}{!expanded ?  `VÍCE` : 'MÉNĚ'}</MenuItem>
-                        <MenuItem onClick={() => handleAction('extend')}>PRODLOUŽIT PLATNOST</MenuItem>
-                        <MenuItem onClick={() => handleAction('delay')}>ODLOŽIT PLATNOST</MenuItem>
-                        <MenuItem onClick={() => handleAction('remove')}>ODSTRANIT</MenuItem>
-                    </Menu>
-                </Grid>
-                                    
-                {!presVignette ? (
-                        <Loader />
-                    ) : (
-                        <>
-                            <Grid container>
-                                <Grid item xs={6}>
-                                    <Typography variant="subtitle1">
-                                    {presVignette.hasStarted ? 'VARIANTA' : (
-                                        <Chip 
-                                            size="small"
-                                            label="NEAKTIVNÍ"
-                                        />
-                                    )}
-                                    </Typography>
-                                </Grid>
+                    
+                        <Typography variant="h4">
+                            {lpFormat(licensePlate)}     
+                        </Typography>
+                        <IconButton aria-label='settings' edge='end' onClick={e => handleClick(e, v)}>  
+                            <MoreVertIcon />
+                        </IconButton>
 
-                                <Grid item xs={6} align="right"> 
-                                    <Typography variant="body1" className={classes.rightPadding}>
-                                        {presVignette.vignetteType?.display_name}     
-                                    </Typography>
-                                </Grid>
-                                
-                                {presVignette.hasStarted ? (
-                                <>
-                                    <Grid item xs={6}>
-                                        <Typography variant="subtitle1">
-                                            ZBÝVÁ
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={6} align="right"> 
-                                        <Typography variant="body1" className={classes.rightPadding}>
-                                            {getDaysDiff(presVignette.valid_from, presVignette.vignetteType.duration)}
-                                        </Typography>
-                                    </Grid>   
-                                </>
-                                ) : (
-                                <>
-                                    <Grid item xs={6}>
-                                        <Typography variant="subtitle1">
-                                            ZAČÍNÁ
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={6} align="right"> 
-                                        <Typography variant="body1" className={classes.rightPadding}>
-                                            {dateFormat(presVignette.valid_from)}
-                                        </Typography>
-                                    </Grid>   
-                                </>
+
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            onClick={handleClose}
+                        >
+                            <MenuItem onClick={handleExpandClick}>{'ZOBRAZIT '}{!expanded ? `VÍCE` : 'MÉNĚ'}</MenuItem>
+                            <MenuItem onClick={() => handleAction('extend')}>PRODLOUŽIT PLATNOST</MenuItem>
+                            <MenuItem onClick={() => handleAction('delay')}>ODLOŽIT PLATNOST</MenuItem>
+                            <MenuItem onClick={() => handleAction('remove')}>ODSTRANIT</MenuItem>
+                        </Menu>
+                    </Grid>
+                    <>
+                        <Grid container>
+                            <Grid item xs={6}>
+                                <Typography variant="subtitle1">
+                                {v.hasStarted() ? 'VARIANTA' : (
+                                    <Chip 
+                                        size="small"
+                                        label="NEAKTIVNÍ"
+                                    />
                                 )}
-                               
+                                </Typography>
                             </Grid>
 
-                            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                            <Grid container>
-                                <Grid item xs={6}>
-                                    <Typography variant="subtitle1">
-                                        ZAKOUPENO
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} align="right"> 
-                                    <Typography variant="body1" className={classes.rightPadding}>
-                                        {dateFormat(presVignette.created)}     
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography variant="subtitle1">
-                                        AKTIVNí OD
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} align="right"> 
-                                    <Typography variant="body1" className={classes.rightPadding}>
-                                        {dateFormat(presVignette.valid_from)}     
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography variant="subtitle1">
-                                        CENA
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={6} align="right"> 
-                                    <Typography variant="body1" className={classes.rightPadding}>
-                                        {presVignette.vignetteType.price} Kč
-                                    </Typography>
-                                </Grid>
+                            <Grid item xs={6} align="right"> 
+                                <Typography variant="body1" className={classes.rightPadding}>
+                                    {v.vignetteType?.display_name}     
+                                </Typography>
                             </Grid>
+                            
+                            {v.hasStarted ? (
+                            <>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        ZBÝVÁ
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        {getDaysDiff(v.valid_from, v.vignetteType.duration)}
+                                    </Typography>
+                                </Grid>   
+                            </>
+                            ) : (
+                            <>
+                                <Grid item xs={6}>
+                                    <Typography variant="subtitle1">
+                                        ZAČÍNÁ
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={6} align="right"> 
+                                    <Typography variant="body1" className={classes.rightPadding}>
+                                        {dateFormat(v.valid_from)}
+                                    </Typography>
+                                </Grid>   
+                            </>
+                            )}
+                            
+                        </Grid>
+
+                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <Grid container>
+                            <Grid item xs={6}>
+                                <Typography variant="subtitle1">
+                                    ZAKOUPENO
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6} align="right"> 
+                                <Typography variant="body1" className={classes.rightPadding}>
+                                    {dateFormat(v.created)}     
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="subtitle1">
+                                    AKTIVNÍ OD
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6} align="right"> 
+                                <Typography variant="body1" className={classes.rightPadding}>
+                                    {dateFormat(v.valid_from)}     
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="subtitle1">
+                                    CENA
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6} align="right"> 
+                                <Typography variant="body1" className={classes.rightPadding}>
+                                    {v.vignetteType?.price} Kč
+                                </Typography>
+                            </Grid>
+                        </Grid>
 
                             <CardActions>
                                 <Button
@@ -212,12 +209,12 @@ const Vignette = ({ licensePlate, handleMenuAction, types }) => {
                                     {'ZOBRAZIT '}{!expanded ?  `VÍCE` : 'MÉNĚ'}
                                 </Button>
                             </CardActions>
-                            </Collapse>
-                        </>
-                    )}     
-            </CardContent>
-      </Card>
-    )
+                        </Collapse>
+                    </>     
+                </CardContent>
+            </Card>
+        </Grid>
+    ))
 }
 export default Vignette;
 

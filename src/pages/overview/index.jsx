@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Grid, Typography } from '@material-ui/core';
 import { fetchLicencePlates } from 'api/vignettes';
-import { getVignettes } from 'store/user';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
+import { getVignettes } from 'store/user';
 import Vignette from 'components/vignette';
 import Alert from 'components/shared/alert';
 import Loader from 'components/shared/loader';
@@ -19,6 +21,8 @@ const Overview = () => {
   
   const [emptyVignettes, setEmptyVignettes] = useState(false);
   const [modalState, setModalState] = useState(null)
+  const [message, setMessage] = useState(null);
+
   
   useEffect(() => {
     dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
@@ -30,7 +34,7 @@ const Overview = () => {
   }, [dispatch])
 
   const openModal = (action, vignette) => {
-    
+
     setModalState({
         action, 
         vignette
@@ -39,15 +43,17 @@ const Overview = () => {
 
   const handleReloadState = () => {
     dispatch(fetchLicencePlates(userId)).then(({ payload }) => {
-        !!payload?.response?.data?.detail && setEmptyVignettes(true);
+        //!!payload?.response?.data?.detail && setEmptyVignettes(true);
 
-        dispatch(fetchVignetteTypes())
+        //dispatch(fetchVignetteTypes())
     })
-
-
     
-
+    
     setModalState(null)
+  }
+
+  const handleCloseMessage = () => {
+    setMessage(null);
   }
 
   const { vignettes, types, pending, error } = vignettesState;
@@ -66,19 +72,28 @@ const Overview = () => {
         <div>
             <Grid container spacing={1}>
                 {vignettes.map((v, i) => (
-                    <Grid item xs={6} sm={6} key={i}>
-                        <Vignette 
-                            handleMenuAction={openModal} 
-                            licensePlate={v.license_plate} 
-                            types={types} 
-                        />
-                    </Grid>
+                    <Vignette 
+                        key={i}
+                        handleMenuAction={openModal} 
+                        licensePlate={v.license_plate} 
+                        types={types} 
+                    />
                 ))}
             </Grid>
             <Modal 
                 state={modalState} 
                 onReloadState={handleReloadState} 
+                setMessage={msg => setMessage(msg)}
             />
+            <Snackbar open={!!message} autoHideDuration={6000} onClose={handleCloseMessage}>
+                <MuiAlert 
+                elevation={6} 
+                variant="filled" 
+                onClose={handleCloseMessage} severity={message?.state === 'success' ? 'success' : 'error'}
+                >
+                {message?.desc}
+                </MuiAlert>
+            </Snackbar>
         </div>
     )
 }

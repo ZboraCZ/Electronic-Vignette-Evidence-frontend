@@ -5,8 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 
 import { vignetteTypes } from 'store/vignettes';
 import ModalExtend from './modal-extend'
@@ -18,7 +16,7 @@ import {
   deleteVignette
 } from 'api/vignettes';
 
-const Modal = ({ state, onReloadState }) => {
+const Modal = ({ state, onReloadState, setMessage }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const typesState = useSelector(vignetteTypes);
@@ -27,7 +25,6 @@ const Modal = ({ state, onReloadState }) => {
   const [extended, setExtended] = useState(null);
   const [delayed, setDelayed] = useState(new Date());
   const [removed, setRemoved] = useState(null);
-  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     !!state && setOpen(true);
@@ -59,8 +56,7 @@ const Modal = ({ state, onReloadState }) => {
   }
 
   const handleDelay = () => {
-    //console.log(delayed, state)
-    
+
     dispatch(postVignetteDelay({
       id: state.vignette.id,
       delay_date: delayed
@@ -90,10 +86,6 @@ const Modal = ({ state, onReloadState }) => {
     })
     
 
-  }
-
-  const handleCloseMessage = () => {
-    setMessage(null);
   }
 
   return (
@@ -146,17 +138,6 @@ const Modal = ({ state, onReloadState }) => {
           )}
         </DialogActions>
       </Dialog>
-
-      <Snackbar open={!!message} autoHideDuration={6000} onClose={handleCloseMessage}>
-        <MuiAlert 
-          elevation={6} 
-          variant="filled" 
-          onClose={handleCloseMessage} severity={message?.state === 'success' ? 'success' : 'error'}
-        >
-          {message?.desc}
-        </MuiAlert>
-      </Snackbar>
-
     </div>
   );
 }

@@ -29,14 +29,12 @@ const ModalDelay = ({ vignette, handleDelayed }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date(vignette.valid_from));
 
     const handleDateChange = (date) => {
-        setSelectedDate(date);
-        handleDelayed(date);
-
+      setSelectedDate(date);
+      handleDelayed(date);
     };
-
     //const typesState = useSelector(vignetteTypes);
   
     //const { types, pending } = typesState;

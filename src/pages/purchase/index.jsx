@@ -21,7 +21,9 @@ import CheckIcon from '@material-ui/icons/Check';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import MuiAlert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button'
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { fetchVignetteTypes } from 'api/vignette-types';
 import { vignetteTypeById } from 'store/vignettes';
@@ -47,7 +49,7 @@ const Purchase = () => {
   const [isFetching, setIsFetching] = useState(null);
   const [lp, setLP] = useState(null);
   const [buySuccess, setBuySuccess] = useState(false);
-
+  const [buyError, setBuyError] = useState(null);
   
   useEffect(() => {
     dispatch(fetchVignetteTypes())
@@ -91,7 +93,9 @@ const Purchase = () => {
     
     dispatch(
       postVignetteBuy({ licensePlate: cleanLP, vignette: vignetteBuy })).then(({ meta }) => {
-        meta.requestStatus === 'fulfilled' && setBuySuccess(true) 
+        meta.requestStatus === 'fulfilled' ? 
+          setBuySuccess(true) :
+          setBuyError('Litujeme, ale něco se pokazilo. Zkuste to znovu.')
       })
 
   }
@@ -114,6 +118,10 @@ const Purchase = () => {
     } else {
       setVignetteFree(null)
     }
+  }
+
+  const handleClose = () => {
+    setBuyError(null);
   }
 
   if (!vignetteType) 
@@ -278,6 +286,17 @@ const Purchase = () => {
           </Grid>
         </div>
       </Paper>
+      
+      <Snackbar open={!!buyError} autoHideDuration={6000} onClose={handleClose}>
+        <MuiAlert 
+          elevation={6} 
+          variant="filled"
+          onClose={handleClose}
+          severity="error"
+         >;
+          {buyError}
+        </MuiAlert>
+      </Snackbar>
     </div>
   )
 }
