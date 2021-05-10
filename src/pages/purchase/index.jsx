@@ -261,7 +261,7 @@ const Purchase = () => {
           >
             <Grid item xs={6}>
               <Typography variant='button'>
-                Cena: <span className={classes.price}>300 Kč</span>
+                Cena: <span className={classes.price}>{vignetteType.price} Kč</span>
               </Typography>
             </Grid>
             <Grid item xs={6}>
