@@ -15,26 +15,23 @@ import { fetchVignetteTypes } from 'api/vignette-types';
 
 
 const UserInfo = () => {
-    
     const classes = useStyles();
     const dispatch = useDispatch();
     const userState = useSelector(getUser);
     const userId = useSelector(getUserId)
     const isAdmin = useSelector(getIsAdmin)
 
-    
     const [isEditing, setIsEditing] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
     const [localUser, setLocalUser] = useState(null)
-    
     const open = Boolean(anchorEl);
 
-    const formLabels = {first_name: 'Jméno', last_name: 'Příjmení', email: 'Email', phone: 'Telefonní číslo'}
+    const formLabels = {first_name: 'Jméno', last_name: 'Příjmení', phone: 'Telefonní číslo'}
     const formTypes = {phone: 'number'};
 
     const handleChange = (e) => {
         setLocalUser(prevState => ({
-            ...prevState, 
+            ...prevState,
             [e.target.name]: e.target.value
         }))
     }
@@ -42,7 +39,7 @@ const UserInfo = () => {
     useEffect(() => {
         dispatch(fetchUser(userId))
     }, [dispatch]);
-    
+
     const handleEditing = () => {
         handleClose()
         setIsEditing(!isEditing)
@@ -51,9 +48,9 @@ const UserInfo = () => {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    
+
     const saveChanges = () => {
-        dispatch(patchUser(localUser))  
+        dispatch(patchUser(localUser))
         setIsEditing(false)
     }
 
@@ -65,14 +62,14 @@ const UserInfo = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-      
+
     useEffect(() => {
         !!userState.user && setLocalUser(userState.user)
     }, [userState])
 
 
-    if (!localUser || userState.pending) 
-        return <Loader className={classes.loader} /> 
+    if (!localUser || userState.pending)
+        return <Loader className={classes.loader} />
 
     return (
         <Paper className={classes.paper}>
@@ -80,7 +77,7 @@ const UserInfo = () => {
                 <Grid item xs={11}>
                     <Grid container className={classes.content}>
                         <Grid item xs={3}>
-                            <Typography variant='button' className={classes.label}>  
+                            <Typography variant='button' className={classes.label}>
                                 Email
                             </Typography>
                         </Grid>
@@ -90,11 +87,11 @@ const UserInfo = () => {
                                 {localUser.email}
                             </Typography>
                         </Grid>
-                        {Object.keys(formLabels).map((key, i) => 
+                        {Object.keys(formLabels).map((key, i) =>
                             <Fragment key={i}>
-                        
+
                                 <Grid item xs={3}>
-                                    <Typography variant='button' className={classes.label}>  
+                                    <Typography variant='button' className={classes.label}>
                                         {formLabels[key]}
                                     </Typography>
                                 </Grid>
@@ -105,14 +102,14 @@ const UserInfo = () => {
                                             {localUser[key]}
                                         </Typography>
                                     ) : (
-                                        <TextField 
-                                            name={key} 
-                                            value={localUser[key]} 
-                                            onChange={handleChange} 
+                                        <TextField
+                                            name={key}
+                                            value={localUser[key]}
+                                            onChange={handleChange}
                                             label={formLabels[key]}
                                             type={formTypes[key]}
-                                            className={classes.input} 
-                                            variant="outlined" 
+                                            className={classes.input}
+                                            variant="outlined"
                                         />
                                     )}
                                 </Grid>
@@ -121,7 +118,7 @@ const UserInfo = () => {
                         {isAdmin && (
                             <Fragment>
                                 <Grid item xs={3}>
-                                    <Typography variant='button' className={classes.label}>  
+                                    <Typography variant='button' className={classes.label}>
                                         Role:
                                     </Typography>
                                 </Grid>
@@ -140,10 +137,10 @@ const UserInfo = () => {
                 <Grid item xs={1}>
                     {!isEditing && (
                     <>
-                        <IconButton aria-label='settings' onClick={handleClick}>  
+                        <IconButton aria-label='settings' onClick={handleClick}>
                             <MoreVertIcon />
                         </IconButton>
-                        
+
                         <Menu
                             anchorEl={anchorEl}
                             keepMounted
@@ -176,7 +173,7 @@ const UserInfo = () => {
                             onClick={saveChanges}
                             loading={userState.pending}
                         >
-                            Uložit změny    
+                            Uložit změny
                         </LoadingButton>
                     </Grid>
                 </Grid>
@@ -187,10 +184,10 @@ const UserInfo = () => {
 export default UserInfo;
 
 const useStyles = makeStyles((theme) => ({
-    input: { 
+    input: {
         paddingBottom: '25px',
         width: '100%'
-    },  
+    },
     paper: {
         paddingTop: 0,
         paddingRight: 0,

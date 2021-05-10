@@ -7,7 +7,7 @@ import { getVignettes } from 'store/user';
 import clsx from 'clsx';
 
 const HistoryVignette = ({ vignette }) => {
-    
+
     const vignettesState = useSelector(getVignettes)
     const { types } = vignettesState;
     const vignetteType = types.find(type => type.id == vignette.vignette_type_id);
@@ -28,18 +28,12 @@ const HistoryVignette = ({ vignette }) => {
         setAnchorEl(null);
     };
 
-    const getRemainingText = (valid, duration) => {
+    const getEndDateText = (valid, duration) => {
         const validFrom = new Date(valid);
-        const today = new Date();
-        const diff = today.getTime() - validFrom.getTime();
-        const diffDays = duration.split(' ')[0] - Math.floor(diff / (1000 * 3600 * 24));
-        
-        if (diffDays <= 0)
-            return '0 dní';
-        else if (diffDays === 1) 
-            return `${diffDays} den`;
-        else
-            return `${diffDays} dní`;
+        const duration_split = parseInt(duration.split(' ')[0])
+        const validTo = validFrom
+        validTo.setDate(validFrom.getDate() + duration_split)
+        return validTo
     }
 
     const dateFormat = (date) => {
@@ -50,7 +44,7 @@ const HistoryVignette = ({ vignette }) => {
     return (
         <Card className={classes.root}>
             <CardContent>
-                <Grid 
+                <Grid
                     container
                     direction="row"
                     justify="space-between"
@@ -59,10 +53,10 @@ const HistoryVignette = ({ vignette }) => {
                     <Typography variant="h4">
                         {vignette.license_plate}
                     </Typography>
-                    <IconButton aria-label='settings' edge='end' onClick={handleClick}>  
+                    <IconButton aria-label='settings' edge='end' onClick={handleClick}>
                         <MoreVertIcon />
                     </IconButton>
-                    
+
                     <Menu
                         anchorEl={anchorEl}
                         keepMounted
@@ -78,19 +72,19 @@ const HistoryVignette = ({ vignette }) => {
                             VARIANTA
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} align="right"> 
+                    <Grid item xs={6} align="right">
                         <Typography variant="body1" className={classes.rightPadding}>
-                            {vignetteType.display_name}     
+                            {vignetteType.display_name}
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant="subtitle1">
-                            ZBÝVÁ
+                            ŽAČÁTEK
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} align="right"> 
+                    <Grid item xs={6} align="right">
                         <Typography variant="body1" className={classes.rightPadding}>
-                            {getRemainingText(vignette.valid_from, vignetteType.duration)}
+                            {dateFormat(vignette.valid_from)}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -99,12 +93,22 @@ const HistoryVignette = ({ vignette }) => {
                     <Grid container>
                         <Grid item xs={6}>
                             <Typography variant="subtitle1">
+                                KONEC
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} align="right">
+                            <Typography variant="body1" className={classes.rightPadding}>
+                                {dateFormat(getEndDateText(vignette.valid_from, vignetteType.duration))}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle1">
                                 DATUM ZAKOUPENÍ
                             </Typography>
                         </Grid>
-                        <Grid item xs={6} align="right"> 
+                        <Grid item xs={6} align="right">
                             <Typography variant="body1" className={classes.rightPadding}>
-                                {dateFormat(vignette.created)}          
+                                {dateFormat(vignette.created)}
                             </Typography>
                         </Grid>
                         <Grid item xs={6}>
@@ -112,7 +116,7 @@ const HistoryVignette = ({ vignette }) => {
                                 CENA
                             </Typography>
                         </Grid>
-                        <Grid item xs={6} align="right"> 
+                        <Grid item xs={6} align="right">
                             <Typography variant="body1" className={classes.rightPadding}>
                                 {vignetteType.price} Kč
                             </Typography>
