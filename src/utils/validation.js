@@ -4,11 +4,11 @@ export const validateEmail = (val) => {
 }
 
 export const validateNoNumbers = (val) => {
-    const re = /^[a-zA-Z]+$/;
+    const re = /^[a-zA-ZÀ-ž]+$/;
     return re.test(val);
 }
 
 export const validateOnlyNumbers = (val) => {
-    const re = /^\d+$/;
+    const re = /^\+?\d+$/;
     return re.test(val)
 }
