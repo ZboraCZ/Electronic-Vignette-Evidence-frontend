@@ -1,14 +1,27 @@
-# Elektronické dálniční známky
+# Electronic Vignette Evidence frontend
 
-### Dev environment 
-* `Node >= 10.16`
-* `npm >= 5.6 `
+### This is Software Engineering II schools subject project that aims to provide a simple frontend to basic electronic vignettes management. 
+### Frontend part can be found [here](https://github.com/ZboraCZ/Electronic-Vignette-Evidence-backend).
 
-To verify: 
+## This project runs on Node.js `npm` package manager. You can download and install Node.js with npm from [here](https://www.npmjs.com/get-npm).
+
+### Verify you have npm installed
 * `npm -v`
 * `node -v`
 
-### Available Scripts
+### Install project Dependencies (from root folder) - this takes some time
+* `npm install`
+
+### Run React.js Application
+* `npm start`
+
+### Open App in browser
+* `http://localhost:3000/`
+
+### If you see that application is not displaying things or not working properly, make sure you have backend application up and running correctly.
+
+#
+## All Available Scripts
 
 Run project:
 #### `npm start`
@@ -33,9 +46,5 @@ Production bundled build
 [Cypress.io](https://www.cypress.io/)
 
 ### Authors
-* Jakub Drajstajtl
-* Jiří Jeřábek
 * Jiří Zbořil
-* Martin Janečka
-* Adam Vlček
-* Jiří Vlach
+* Jiří Jeřábek
