@@ -1,7 +1,7 @@
 # Electronic Vignette Evidence frontend
 
-### This is Software Engineering II schools subject project that aims to provide a simple frontend to basic electronic vignettes management. 
-### Frontend part can be found [here](https://github.com/ZboraCZ/Electronic-Vignette-Evidence-backend).
+#### This is Software Engineering II schools subject project that aims to provide a simple frontend to basic electronic vignettes management. 
+#### Backend part can be found [here](https://github.com/ZboraCZ/Electronic-Vignette-Evidence-backend).
 
 ## This project runs on Node.js `npm` package manager. You can download and install Node.js with npm from [here](https://www.npmjs.com/get-npm).
 
